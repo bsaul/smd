@@ -4,6 +4,14 @@ expect_list <- function(x){
   expect_is(mean_var(x), "list")
 }
 
+## TODO: tests to add
+# unsorted factors
+# missing x
+# length(0) x
+# length(1) x
+# factor with only one level
+# character with > 50 unique values
+
 test_that("mean_var works for numeric values", {
   expect_list(rnorm(10))
 })

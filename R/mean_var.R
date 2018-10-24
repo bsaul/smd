@@ -38,6 +38,7 @@ multinom_var <- function(p){
 #'
 #' @name mean_var
 #' @param x a vector of values
+#' @importFrom stats var
 #' @return a list containing \code{mean} and \code{var}
 
 setGeneric("mean_var", def = function(x) {
@@ -50,7 +51,7 @@ setMethod(
   f          = "mean_var",
   signature  = "numeric",
   definition = function(x){
-    list(mean = mean(x), var = var(x))
+    list(mean = mean(x), var = stats::var(x))
 } )
 
 setMethod(
@@ -59,7 +60,7 @@ setMethod(
   definition = function(x){
 
     check_for_two_levels(x)
-    list(mean = mean(x), var = var(x))
+    list(mean = mean(x), var = stats::var(x))
 } )
 
 #' @rdname mean_var
@@ -68,7 +69,7 @@ setMethod(
   f          = "mean_var",
   signature  = "logical",
   definition = function(x){
-    list(mean = mean(x), var = var(x))
+    list(mean = mean(x), var = stats::var(x))
 } )
 
 #' @rdname mean_var

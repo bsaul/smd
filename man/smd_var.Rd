@@ -2,10 +2,15 @@
 % Please edit documentation in R/smd.R
 \name{smd_var}
 \alias{smd_var}
-\title{Computes smd variance}
+\title{Computes SMD variance}
 \usage{
 smd_var(d, n)
 }
+\arguments{
+\item{d}{an SMD value}
+
+\item{n}{vector of group sizes}
+}
 \description{
-Computes smd variance
+Not yet implemented
 }
