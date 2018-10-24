@@ -51,6 +51,10 @@ compute_smd <- function(D, S){
 #' for values of \code{x}
 #' @seealso \code{\link{compute_smd}} for mathematical details
 #' @export
+#' @examples
+#' x <- rnorm(100)
+#' g <- rep(1:2, each = 50)
+#' smd(x, g)
 
 setGeneric(
   "smd",
@@ -67,8 +71,12 @@ setGeneric(
 })
 
 
-#' Computes smd variance
-#' @export
+#' Computes SMD variance
+#'
+#' Not yet implemented
+#' @param d an SMD value
+#' @param n vector of group sizes
+#'
 
 smd_var <- function(d, n){
   nn <- sum(n)

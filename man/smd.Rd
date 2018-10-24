@@ -20,6 +20,11 @@ for values of \code{x}
 \description{
 Computes the standardized mean differnce (SMD) between two groups.
 }
+\examples{
+x <- rnorm(100)
+g <- rep(1:2, each = 50)
+smd(x, g)
+}
 \seealso{
 \code{\link{compute_smd}} for mathematical details
 }
