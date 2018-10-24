@@ -10,7 +10,8 @@ Imports:
   purrr (>= 0.2.5),
   MASS (>= 7.3-50)
 Suggests:
-  testthat
+  testthat,
+  stddiff
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true

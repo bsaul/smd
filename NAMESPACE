@@ -2,7 +2,5 @@
 
 export(smd)
 export(smd_var)
-exportMethods(smd)
 importFrom(MASS,ginv)
 importFrom(fastmatch,ctapply)
-importFrom(purrr,map)
