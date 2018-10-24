@@ -8,7 +8,6 @@ test_that("mean_var works for numeric values", {
   expect_list(rnorm(10))
 })
 
-
 test_that("mean_var works for integer values", {
   expect_list(1L:10L)
 })
