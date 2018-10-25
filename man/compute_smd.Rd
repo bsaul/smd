@@ -2,7 +2,7 @@
 % Please edit documentation in R/smd.R
 \name{compute_smd}
 \alias{compute_smd}
-\title{Computes the standardized mean difference}
+\title{Compute the standardized mean difference}
 \usage{
 compute_smd(D, S)
 }
@@ -37,6 +37,13 @@ where \eqn{\bar{x}_g} is the sample mean for group \eqn{g} and \eqn{s^2_g} is th
 
 For a \code{logical} or \code{factor} with only two levels, the equation above is
 \eqn{\bar{x}_g = \hat{p}_g}, i.e. the sample proportion and \eqn{s^2_g = \hat{p}_g(1 - \hat{p}_g)}
+(NOTE: interally \code{smd} uses the \code{\link[stats]{var}} function, which uses \eqn{n-1} as the
+denominator. Hence, in small samples, \eqn{s^2_g} will not be precisely
+\eqn{\hat{p}_g(1 - \hat{p}_g)})
+}
+\references{
+Yang, D., & Dalton, J. E. (2012, April). A unified approach to measuring
+the effect size between two groups using SAS®. In SAS Global Forum (Vol. 335, pp. 1-6)
 }
 \seealso{
 \code{\link{smd}}
