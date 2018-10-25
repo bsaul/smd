@@ -4,16 +4,21 @@ Title: Standardized Mean Difference (SMD)
 Version: 0.1.0
 Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), email = "bsaul@novisci.com"))
 Maintainer: Bradley Saul <bsaul@novisci.com>
-Description: Computes standardized mean differences and confidence intervals for multiple data types.
+Description: Computes standardized mean differences and confidence intervals for 
+    multiple data types based on Yang, D., & Dalton, J. E. (2012) 
+    (http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf). 
 Imports:
   fastmatch (>= 1.1-0),
   purrr (>= 0.2.5),
-  MASS (>= 7.3-50)
+  MASS (>= 7.3-50),
+  methods (>= 3.5.1)
 Suggests:
   testthat,
   stddiff,
-  tableone
+  tableone,
+  knitr
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
