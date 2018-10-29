@@ -1,6 +1,6 @@
 Package: SugarMaryDenver
 Type: Package
-Title: Standardized Mean Difference (SMD)
+Title: Compute Standardized Mean Difference (SMD)
 Version: 0.3.0
 Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), email = "bsaul@novisci.com"))
 Maintainer: Bradley Saul <bsaul@novisci.com>
@@ -19,6 +19,8 @@ Suggests:
   knitr,
   dplyr
 License: GPL-3 + file LICENSE
+URL: https://gitlab.novisci.com/statistics/SugarMaryDenver 
+BugReports: https://gitlab.novisci.com/statistics/SugarMaryDenver/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
