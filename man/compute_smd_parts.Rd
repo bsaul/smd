@@ -4,8 +4,8 @@
 \alias{compute_smd_parts}
 \title{Compute components of SMD}
 \usage{
-compute_smd_parts(x, g, tapplyMethod = fastmatch::ctapply,
-  tapplyFUN = mean_var, tapplyArgs = list(MERGE = list))
+compute_smd_parts(x, g, tapplyMethod = tapply, tapplyFUN = mean_var,
+  tapplyArgs = list())
 }
 \arguments{
 \item{x}{a vector of values}
