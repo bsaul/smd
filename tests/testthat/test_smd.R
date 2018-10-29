@@ -45,6 +45,8 @@ dg <- list(
        x    = rep(rep(1L:3L, each = 10), times = 2)),
   list(type = "factor",
        x    = factor(rep(rep(c("x", "y", "z"), each = 10), times = 2))),
+  list(type = "factor_unsorted",
+       x    = factor(rep(rep(c("x", "y", "z"), times = 10), times = 2))),
   list(type = "character",
        x    = rep(rep(c("x", "y", "z"), each = 10), times = 2)),
   list(type = "boolean",
@@ -108,4 +110,13 @@ test_that("smd() gives error on if g does not have 2 levels", {
   x <- rnorm(30)
   g <- rep(c("A", "B", "C"), each = 30)
   expect_error(smd(x = x, g = g))
+})
+
+
+test_that("smd() runs if g is not sorted", {
+  x <- rnorm(40)
+  g <- rep(c("A", "B"), times = 20)
+
+  expect_length(smd(x = x, g = g), 1)
+
 })
