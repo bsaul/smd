@@ -126,9 +126,9 @@ compute_smd <- function(D, S){
 #' @importFrom purrr map
 
 compute_smd_parts <- function(x, g,
-                              tapplyMethod = fastmatch::ctapply,
+                              tapplyMethod = tapply,
                               tapplyFUN    = mean_var,
-                              tapplyArgs   = list(MERGE = list)){
+                              tapplyArgs   = list()){
 
   # Checks
   if(length(x) != length(g)){
