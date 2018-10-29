@@ -1,21 +1,3 @@
-#' Computes proportions in each factor level
-#'
-#' @param x a factor variable. It must be \code{sort}ed first!
-#'
-setGeneric("proportions", function(x) standardGeneric("proportions"))
-
-#' @importFrom fastmatch ctapply
-
-setMethod(
-  f          = "proportions",
-  signature  = "factor",
-  definition = function(x){
-    n <- length(x)
-    # This is basically equivalent to table() but a touch faster
-    fastmatch::ctapply(X = x, INDEX = x, FUN = function(g) length(g)/n)
-  }
-)
-
 #' Variance computations
 #'
 #' @name variance_computations
@@ -29,7 +11,6 @@ NULL
 multinom_var <- function(p){
   diag(p) - outer(p, p)
 }
-
 
 #' Compute mean and variance
 #'
@@ -78,7 +59,7 @@ setMethod(
   f          = "mean_var",
   signature  = "factor",
   definition = function(x){
-    p <- proportions(x)
+    p <- prop.table(table(x))
     list(mean = p, var = multinom_var(p))
   })
 

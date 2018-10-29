@@ -8,6 +8,7 @@ knitr::opts_chunk$set(
 library(SugarMaryDenver)
 
 ## ----numeric-------------------------------------------------------------
+set.seed(123)
 xn <- rnorm(100)
 gg <- rep(c("A", "B"), each = 50)
 smd(x = xn, g = gg)
@@ -39,4 +40,12 @@ smd(x = ll, g = gg)
 ## ----data.frame----------------------------------------------------------
 df <- data.frame(xn, xi, xc, xf, xl)
 smd(x = df, g = gg)
+
+## ----dplyr---------------------------------------------------------------
+library(dplyr)
+df$g <- gg
+df %>%
+  summarize_at(
+    .vars = vars(matches("^x")),
+    .funs = funs(smd(., g = g)))
 
