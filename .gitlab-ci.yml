@@ -4,13 +4,17 @@ stages:
   - testing
   - coverage
 
-check:
+setup:
   stage: testing
   script:
     - R -e 'install.packages(c("fastmatch", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
+
+check:
+  stage: testing
+  dependencies:
+    - setup
+  script:
     - R -e 'devtools::check()'
-  tags:
-    - r-packages
 
 coverage:
   stage: coverage
