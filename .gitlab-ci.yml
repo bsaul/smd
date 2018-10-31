@@ -1,0 +1,19 @@
+image: rocker/tidyverse
+
+stages:
+  - testing
+
+check:
+  stage: testing
+  script:
+    - R -e 'install.packages(c("fastmatch", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
+    - R -e 'devtools::check()'
+  tags:
+    - r-packages
+
+coverage:
+  stage: testing
+  dependencies:
+    - check
+  script:
+    - R -e 'covr::package_coverage(type = c("tests", "examples"))'
