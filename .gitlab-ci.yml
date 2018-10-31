@@ -2,6 +2,7 @@ image: rocker/tidyverse
 
 stages:
   - testing
+  - coverage
 
 check:
   stage: testing
@@ -12,7 +13,7 @@ check:
     - r-packages
 
 coverage:
-  stage: testing
+  stage: coverage
   dependencies:
     - check
   script:
