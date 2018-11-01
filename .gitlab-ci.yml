@@ -8,7 +8,7 @@ testing:
   stage: testing
   script:
     - R -e 'install.packages(c("fastmatch", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
-    - R -e 'devtools::check()'
+    - R -e 'devtools::check(args = "--no-manual")'
 
 coverage:
   stage: coverage
