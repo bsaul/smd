@@ -12,7 +12,7 @@
 
 <meta name="author" content="Bradley Saul" />
 
-<meta name="date" content="2018-10-29" />
+<meta name="date" content="2018-11-01" />
 
 <title>Using the smd() function</title>
 
@@ -280,52 +280,97 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Using the smd() function</h1>
 <h4 class="author"><em>Bradley Saul</em></h4>
-<h4 class="date"><em>2018-10-29</em></h4>
+<h4 class="date"><em>2018-11-01</em></h4>
 
 
 
 <p>The <code>SugarMaryDenver</code> package provides the <code>smd</code> method to compute standardized mean differences between two groups for continuous values (<code>numeric</code> and <code>integer</code> data types) and categorical values (<code>factor</code>, <code>character</code>, and <code>logical</code>). The method also works on <code>matrix</code>, <code>list</code>, and <code>data.frame</code> data types by applying <code>smd()</code> over the columns of the <code>matrix</code> or <code>data.frame</code> and each item of the <code>list</code>. The package is based on <span class="citation">Yang and Dalton (2012)</span>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(SugarMaryDenver)</a></code></pre></div>
+<p>The <code>smd</code> function computes the standardized mean difference for each level <span class="math inline">\(k\)</span> of a grouping variable compared to a reference <span class="math inline">\(r\)</span> level:</p>
+<p><span class="math display">\[
+d_k = \sqrt{(\bar{x}_r - \bar{x}_{k})^{\intercal}S_{rk}^{-1}(\bar{x}_r - \bar{x}_{k})}
+\]</span></p>
+<p>where <span class="math inline">\(\bar{x}_{\cdot}\)</span> and <span class="math inline">\(S_{rk}\)</span> are the sample mean and covariances for reference group <span class="math inline">\(r\)</span> and group <span class="math inline">\(k\)</span>, respectively. In the case that <span class="math inline">\(x\)</span> is categorical, <span class="math inline">\(\bar{x}\)</span> is the vector of proportions of each category level within a group, and <span class="math inline">\(S_{rk}\)</span> is the multinomical covariance matrix.</p>
+<p>Standard errors are computed using the formula described in <span class="citation">Hedges and Olkin (1985)</span>:</p>
+<p><span class="math display">\[
+\sqrt{ \frac{n_r + n_k}{n_rn_k} + \frac{d_k^2}{2(n_r + n_k)} }
+\]</span></p>
 <div id="examples" class="section level1">
 <h1>Examples</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(SugarMaryDenver)</a></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">xn &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">gg &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>), <span class="dt">each =</span> <span class="dv">50</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw">smd</span>(<span class="dt">x =</span> xn, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; [1] -0.1223139</span></a></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">xi &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="dv">100</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xi, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; [1] 0.1835709</span></a></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">xc &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">replicate</span>(<span class="dv">2</span>, <span class="kw">sort</span>(<span class="kw">sample</span>(letters[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dv">50</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)), <span class="dt">simplify =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xc, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt; [1] 0.2760586</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-2" data-line-number="2">xn &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">90</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">gg2 &lt;-<span class="st"> </span><span class="kw">rep</span>(LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>], <span class="dt">each =</span> <span class="dv">45</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">gg3 &lt;-<span class="st"> </span><span class="kw">rep</span>(LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">each =</span> <span class="dv">30</span>)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">smd</span>(<span class="dt">x =</span> xn, <span class="dt">g =</span> gg2)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt;   term   estimate</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; 1    B 0.03375131</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw">smd</span>(<span class="dt">x =</span> xn, <span class="dt">g =</span> gg3)</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;   term    estimate</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; 1    B -0.24746529</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; 2    C -0.07714974</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="kw">smd</span>(<span class="dt">x =</span> xn, <span class="dt">g =</span> gg2, <span class="dt">std.error =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt;   term   estimate std.error</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; 1    B 0.03375131 0.2108335</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="kw">smd</span>(<span class="dt">x =</span> xn, <span class="dt">g =</span> gg3, <span class="dt">std.error =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt;   term    estimate std.error</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; 1    B -0.24746529 0.2591852</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; 2    C -0.07714974 0.2582949</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">xi &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="dv">90</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xi, <span class="dt">g =</span> gg2)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;   term     estimate</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; 1    B -0.008289296</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">xc &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">replicate</span>(<span class="dv">2</span>, <span class="kw">sort</span>(<span class="kw">sample</span>(letters[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dv">45</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)), <span class="dt">simplify =</span> <span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xc, <span class="dt">g =</span> gg2)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;   term  estimate</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; 1    B 0.2518824</span></a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">xf &lt;-<span class="st"> </span><span class="kw">factor</span>(xc)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xf, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; [1] 0.2760586</span></a></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">xl &lt;-<span class="st"> </span><span class="kw">as.logical</span>(<span class="kw">rbinom</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>))</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xl, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; [1] 0</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xf, <span class="dt">g =</span> gg2)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt;   term  estimate</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; 1    B 0.2518824</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">xl &lt;-<span class="st"> </span><span class="kw">as.logical</span>(<span class="kw">rbinom</span>(<span class="dv">90</span>, <span class="dv">1</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>))</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> xl, <span class="dt">g =</span> gg2)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt;   term    estimate</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; 1    B -0.04435493</span></a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">mm &lt;-<span class="st"> </span><span class="kw">cbind</span>(xl, xl, xl, xl)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> mm, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; xl xl xl xl </span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt;  0  0  0  0</span></a></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">ll &lt;-<span class="st"> </span><span class="kw">list</span>(xn, xi, xf, xl)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> ll, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; [1] -0.1223139  0.1835709  0.2760586  0.0000000</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> mm, <span class="dt">g =</span> gg3, <span class="dt">std.error =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt;               xl          xl          xl          xl</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1,]  0.06744642  0.06744642  0.06744642  0.06744642</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; [2,] -0.26514719 -0.26514719 -0.26514719 -0.26514719</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">ll &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">xn =</span> xn, <span class="dt">xi =</span> xi, <span class="dt">xf =</span> xf, <span class="dt">xl =</span> xl)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> ll, <span class="dt">g =</span> gg3)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt;   variable term    estimate</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; 1       xn    B -0.24746529</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; 2       xn    C -0.07714974</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; 3       xi    B  0.12351572</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; 4       xi    C -0.05652726</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt; 5       xf    B  1.63815271</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; 6       xf    C  2.39588392</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; 7       xl    B  0.06744642</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; 8       xl    C -0.26514719</span></a></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(xn, xi, xc, xf, xl)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> df, <span class="dt">g =</span> gg)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt;         xn         xi         xc         xf         xl </span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; -0.1223139  0.1835709  0.2760586  0.2760586  0.0000000</span></a></code></pre></div>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">smd</span>(<span class="dt">x =</span> df, <span class="dt">g =</span> gg3)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt;    variable term    estimate</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; 1        xn    B -0.24746529</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; 2        xn    C -0.07714974</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt; 3        xi    B  0.12351572</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">#&gt; 4        xi    C -0.05652726</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">#&gt; 5        xc    B  1.63815271</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">#&gt; 6        xc    C  2.39588392</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt; 7        xf    B  1.63815271</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">#&gt; 8        xf    C  2.39588392</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">#&gt; 9        xl    B  0.06744642</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">#&gt; 10       xl    C -0.26514719</span></a></code></pre></div>
 <div id="using-smd-with-dplyr" class="section level2">
 <h2>Using <code>smd</code> with <code>dplyr</code></h2>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">df<span class="op">$</span>g &lt;-<span class="st"> </span>gg</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">df<span class="op">$</span>g &lt;-<span class="st"> </span>gg2</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">df <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw">summarize_at</span>(</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">    <span class="dt">.vars =</span> <span class="kw">vars</span>(<span class="kw">matches</span>(<span class="st">&quot;^x&quot;</span>)),</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">    <span class="dt">.funs =</span> <span class="kw">funs</span>(<span class="kw">smd</span>(., <span class="dt">g =</span> g)))</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt;           xn        xi        xc        xf xl</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; 1 -0.1223139 0.1835709 0.2760586 0.2760586  0</span></a></code></pre></div>
+<a class="sourceLine" id="cb10-5" data-line-number="5">    <span class="dt">.vars =</span> <span class="kw">vars</span>(dplyr<span class="op">::</span><span class="kw">matches</span>(<span class="st">&quot;^x&quot;</span>)),</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">    <span class="dt">.funs =</span> <span class="kw">funs</span>(<span class="dt">smd =</span> <span class="kw">smd</span>(., <span class="dt">g =</span> g)<span class="op">$</span>estimate))</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt;       xn_smd       xi_smd    xc_smd    xf_smd      xl_smd</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; 1 0.03375131 -0.008289296 0.2518824 0.2518824 -0.04435493</span></a></code></pre></div>
 </div>
 </div>
 <div id="other-standardized-mean-difference-packages" class="section level1">
@@ -335,6 +380,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
 <div id="refs" class="references">
+<div id="ref-hedges1985">
+<p>Hedges, LV, and I Olkin. 1985. <em>Statistical Methods for Meta-Analysis</em>.</p>
+</div>
 <div id="ref-yang2012unified">
 <p>Yang, Dongsheng, and Jarrod E Dalton. 2012. “A Unified Approach to Measuring the Effect Size Between Two Groups Using SAS” 335: 1–6. <a href="http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf" class="uri">http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf</a>.</p>
 </div>

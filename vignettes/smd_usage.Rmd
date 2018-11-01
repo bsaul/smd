@@ -123,7 +123,7 @@ library(dplyr)
 df$g <- gg2
 df %>%
   summarize_at(
-    .vars = vars(matches("^x")),
+    .vars = vars(dplyr::matches("^x")),
     .funs = funs(smd = smd(., g = g)$estimate))
 ```
 
