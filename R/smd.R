@@ -5,7 +5,8 @@
 #' @name smd
 #' @param x a vector of values
 #' @param g a vector of groupings to compare
-#' @param method not yet implemented
+#' @param std.error Logical indicator for computing standard errors using
+#' \code{\link{compute_smd_var}}
 #' @return the standardized mean differences between levels of \code{g}
 #' for values of \code{x}
 #' @seealso \code{\link{compute_smd}} for mathematical details
@@ -17,9 +18,28 @@
 
 setGeneric(
   "smd",
-  def = function(x, g, method = NA_character_){
+  def = function(x, g, std.error = FALSE){
     parts <- compute_smd_parts(x, g)
-    compute_smd(parts$D, parts$S)
+    d     <- compute_smd_pairwise(parts)
+    out   <- list(term = names(d), estimate = unname(d))
+
+    if(std.error){
+      ste <- unlist(Map(compute_smd_var,d = d, smd_parts = parts))
+      out <- append(out, list(std.error = unname(sqrt(ste))))
+    }
+
+    tidy_smd_singlevar(out)
+  }
+)
+
+#' @rdname smd
+#' @export
+
+setMethod(
+  "smd",
+  signature = "character",
+  def = function(x, g, std.error = FALSE){
+    smd(as.factor(x), g = g, std.error = std.error)
   }
 )
 
@@ -29,8 +49,8 @@ setGeneric(
 setMethod(
   "smd",
   signature = "logical",
-  def = function(x, g, method = NA_character_){
-    smd(as.numeric(x), g = g, method = method)
+  def = function(x, g, std.error = FALSE){
+    smd(as.numeric(x), g = g, std.error = std.error)
   }
 )
 
@@ -40,32 +60,35 @@ setMethod(
 setMethod(
   "smd",
   signature = "matrix",
-  def = function(x, g, method = NA_character_){
-    apply(x, 2, function(j) smd(x = j, g = g, method = method))
+  def = function(x, g, std.error = FALSE){
+    if(std.error){
+      stop("smd is not set up to compute std.error on a matrix")
+    }
+    apply(x, 2, function(j) simplify2array(smd(x = j, g = g, std.error = std.error)$estimate))
   }
 )
 
 #' @rdname smd
-#' @importFrom purrr map_dbl
 #' @export
 
 setMethod(
   "smd",
   signature = "list",
-  def = function(x, g, method = NA_character_){
-    purrr::map_dbl(x, ~ smd(x = .x, g = g, method = method))
+  def = function(x, g, std.error = FALSE){
+
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error)))
   }
 )
 
 #' @rdname smd
-#' @importFrom purrr map_dbl
 #' @export
 
 setMethod(
   "smd",
   signature = "data.frame",
-  def = function(x, g, method = NA_character_){
-    purrr::map_dbl(x, ~ smd(x = .x, g = g, method = method))
+  def = function(x, g, std.error = FALSE){
+
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error)))
   }
 )
 
@@ -97,6 +120,9 @@ setMethod(
 #' denominator. Hence, in small samples, \eqn{s^2_g} will not be precisely
 #' \eqn{\hat{p}_g(1 - \hat{p}_g)})
 #'
+#' @name compute_smd
+#' @param smd_parts a \code{list} of components for from \code{\link{compute_smd_parts}}
+#' computing standardized mean differences
 #' @param D vector of differences for each level of a factor (will be length 1 for numeric values)
 #' @param S the covariance matrix
 #' @importFrom MASS ginv
@@ -105,12 +131,38 @@ setMethod(
 #' the effect size between two groups using SAS®. In SAS Global Forum (Vol. 335, pp. 1-6)
 #' @seealso \code{\link{smd}}
 
+compute_smd_pairwise <- function(smd_parts){
+  d <- simplify2array(lapply(smd_parts, function(x) compute_smd(x$D, x$S)))
+  d
+}
+
+#' @rdname compute_smd
+
 compute_smd <- function(D, S){
   out <- sqrt(t(D) %*% MASS::ginv(S) %*% D)
   if(length(D) == 1){
     out <- out * sign(D)
   }
-  drop(out)
+  out
+}
+
+#' Computes SMD variance
+#'
+#' Calculates the variance of a standardized mean difference using the method of
+#' Hedges and Olkin (1985):
+#'
+#' \deqn{
+#' \sqrt{\frac{n_1 + n_2}{n_1n_2} + \frac{d^2}{2(n_1 + n_2)}}
+#' }
+#'
+#' @param d an SMD value
+#' @inheritParams compute_smd
+#'
+
+compute_smd_var <- function(d, smd_parts){
+  N <- smd_parts$N
+  sn <- sum(N)
+  sn/prod(N) + (d^2)/(2*sn)
 }
 
 #' Compute components of SMD
@@ -119,15 +171,13 @@ compute_smd <- function(D, S){
 #'
 #' @inheritParams smd
 #' @param tapplyMethod either \code{tapply} or \code{\link[fastmatch]{ctapply}}.
-#' Defaults to \code{\link[fastmatch]{ctapply}}.
+#' Defaults to \code{\link[base]{tapply}}
 #' @param tapplyFUN the \code{FUN} argument passed to \code{tapplyMethod}
 #' @param tapplyArgs a \code{list} of arguments passed to \code{tapplyMethod}
-#' @importFrom fastmatch ctapply
-#' @importFrom purrr map
 
 compute_smd_parts <- function(x, g,
                               tapplyMethod = tapply,
-                              tapplyFUN    = mean_var,
+                              tapplyFUN    = n_mean_var,
                               tapplyArgs   = list()){
 
   # Checks
@@ -135,28 +185,47 @@ compute_smd_parts <- function(x, g,
     stop("Length of x and g must match")
   }
 
-  if(length(unique(g)) != 2){
-    stop("g must have 2 unique values. smd() is currently only implemented for two groups.")
+  ng  <- length(unique(g))
+
+  if(ng < 2){
+    stop("g must contain at least two levels.")
   }
 
+  ref <- 1 # TODO be able to take reference argument
+
   args <- append(list(X = x, INDEX = g, FUN = tapplyFUN), tapplyArgs)
-  U    <- do.call(tapplyMethod, args = args)
 
-  #TODO: is a list the best representation for mean_var?
-  D <- Reduce("-", purrr::map(U, ~ .x$mean))
-  S <- Reduce("+", purrr::map(U, ~.x$var))/length(U)
+  # Collect necessary values
+  U <- simplify2array(do.call(tapplyMethod, args = args))
+  # Create pairwise components
+  N <- lapplyFUNpairwise(U["n", ], c, ref)
+  D <- lapplyFUNpairwise(U["mean", ], `-`, ref)
+  S <- lapplyFUNpairwise(U["var", ], function(x, y) (x + y)/2, ref)
 
-  list(D = D, S = S)
+  Map(list, N = N, D = D, S = S)
 }
 
-#' Computes SMD variance
+#' Helper to clean up smd output
 #'
-#' Not yet implemented
-#' @param d an SMD value
-#' @param n vector of group sizes
-#'
+#' @name smd_tidier
+#' @param smd_res a result of \link{smd}
+#' @return a \code{data.frame}
 
-smd_var <- function(d, n){
-  nn <- sum(n)
-  nn/prod(n) + (d^2)/(2*nn)
+tidy_smd_singlevar <- function(smd_res){
+  data.frame(smd_res, stringsAsFactors = FALSE)
+}
+
+#' @rdname smd_tidier
+tidy_smd_multiplevar <- function(smd_res){
+  if(length(names(smd_res)) == length(smd_res)){
+    hold <- lapply(seq_along(smd_res), function(i){
+      data.frame(variable = names(smd_res)[i], smd_res[[i]],stringsAsFactors = FALSE)
+    })
+  } else {
+    hold <- lapply(smd_res, function(x){
+      data.frame(x,stringsAsFactors = FALSE)
+    })
+  }
+
+  do.call("rbind", hold)
 }
