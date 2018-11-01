@@ -3,28 +3,32 @@
 \docType{methods}
 \name{smd}
 \alias{smd}
+\alias{smd,character-method}
 \alias{smd,logical-method}
 \alias{smd,matrix-method}
 \alias{smd,list-method}
 \alias{smd,data.frame-method}
 \title{Compute Standardized Mean Difference}
 \usage{
-smd(x, g, method = NA_character_)
+smd(x, g, std.error = FALSE)
 
-\S4method{smd}{logical}(x, g, method = NA_character_)
+\S4method{smd}{character}(x, g, std.error = FALSE)
 
-\S4method{smd}{matrix}(x, g, method = NA_character_)
+\S4method{smd}{logical}(x, g, std.error = FALSE)
 
-\S4method{smd}{list}(x, g, method = NA_character_)
+\S4method{smd}{matrix}(x, g, std.error = FALSE)
 
-\S4method{smd}{data.frame}(x, g, method = NA_character_)
+\S4method{smd}{list}(x, g, std.error = FALSE)
+
+\S4method{smd}{data.frame}(x, g, std.error = FALSE)
 }
 \arguments{
 \item{x}{a vector of values}
 
 \item{g}{a vector of groupings to compare}
 
-\item{method}{not yet implemented}
+\item{std.error}{Logical indicator for computing standard errors using
+\code{\link{compute_smd_var}}}
 }
 \value{
 the standardized mean differences between levels of \code{g}
