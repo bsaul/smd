@@ -3,14 +3,15 @@ context("Testing the smd() functions")
 # TODO: tests to add
 # handling of unsorted grouping variable
 # handling of unsorted factor (and character) levels
-# using compute_smd_parts using tapply
+# standard error computations are correct
+# once implemented add checks for changing reference group
 
 
 ## Comparing to other packages ####
 
 compare_packages <- function(data){
 
-  smdval <- abs(smd(data$x, data$g))
+  smdval <- abs(smd(data$x, data$g)$estimate)
   # compare to TableOne package
   # NOTE: for boolean variables in small datasets, tableone and smd will have
   # small differences due the way the variance is computed.
@@ -78,16 +79,16 @@ test_that("smd() works/does not as appropriate with matrices", {
 test_that("smd() works/does not as appropriate with lists", {
   X <- replicate(rnorm(20), n = 5, simplify = FALSE)
   g <- rep(c("A", "B"), each = 10)
-  expect_is(smd(x = X, g = g), "numeric")
+  expect_is(smd(x = X, g = g), "data.frame")
 
   # checking lists of different types
-  expect_is(smd(x = purrr::map(dg, ~ .x$x), g = rep(c("A", "B"), each = 30)), "numeric")
+  expect_is(smd(x = purrr::map(dg, ~ .x$x), g = rep(c("A", "B"), each = 30)), "data.frame")
 })
 
 test_that("smd() works/does not as appropriate with data.frames", {
   X <- as.data.frame(replicate(rnorm(20), n = 5, simplify = FALSE), col.names = 1:5)
   g <- rep(c("A", "B"), each = 10)
-  expect_is(smd(x = X, g = g), "numeric")
+  expect_is(smd(x = X, g = g), "data.frame")
 
 
 })
@@ -117,6 +118,6 @@ test_that("smd() runs if g is not sorted", {
   x <- rnorm(40)
   g <- rep(c("A", "B"), times = 20)
 
-  expect_length(smd(x = x, g = g), 1)
+  expect_is(smd(x = x, g = g), "data.frame")
 
 })
