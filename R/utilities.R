@@ -20,5 +20,7 @@ check_for_two_levels <- function(x){
 #'
 
 lapplyFUNpairwise <- function(x, f, ref){
+  if(sum(is.na(x)) >= 1) stop("x contians NA value")
   lapply(x[-ref], FUN = function(y) { f(x[[ref]], y) })
 }
+
