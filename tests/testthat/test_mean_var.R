@@ -40,9 +40,8 @@ test_that("n_mean_var works for missing x", {
   expect_list(c(1, 2, 3, NA))
 })
 
-# Error occured
 test_that("n_mean_var works for length(0) x", {
-  expect_list(c(NULL))
+  expect_error(n_mean_var(NULL))
 })
 
 test_that("n_mean_var works for length(1) x", {
@@ -60,5 +59,5 @@ char_generator <- function(n){
 
 x <- char_generator(51)
 test_that("n_mean_var works for >50 unique values", {
-  expect_list(x)
+  expect_warning(n_mean_var(x), "more than 50 levels")
 })
