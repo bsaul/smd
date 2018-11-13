@@ -2,7 +2,7 @@ context("Testing the smd() functions")
 
 # TODO: tests to add
 # handling of unsorted grouping variable (done)
-# handling of unsorted factor (and character) levels
+# handling of unsorted factor (and character) levels (done)
 # standard error computations are correct
 # once implemented add checks for changing reference group
 
