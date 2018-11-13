@@ -1,7 +1,7 @@
 context("Testing the smd() functions")
 
 # TODO: tests to add
-# handling of unsorted grouping variable
+# handling of unsorted grouping variable (done)
 # handling of unsorted factor (and character) levels
 # standard error computations are correct
 # once implemented add checks for changing reference group
@@ -114,10 +114,22 @@ test_that("smd() gives error on if g does not have 2 levels", {
 })
 
 
-test_that("smd() runs if g is not sorted", {
+test_that("smd() runs if g is an unsorted grouping variable", {
   x <- rnorm(40)
   g <- rep(c("A", "B"), times = 20)
 
   expect_is(smd(x = x, g = g), "data.frame")
 
 })
+
+
+create_g <- sample(0:1, 20, replace = TRUE)
+create_g_factor <- factor(create_g, labels = c("high", "low"))
+
+test_that("smd() runs if g is unsorted factor (and character) levels", {
+  x <- rnorm(20)
+  g <- create_g_factor
+  expect_is(smd(x = x, g = g), "data.frame")
+})
+
+
