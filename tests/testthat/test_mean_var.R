@@ -10,7 +10,7 @@ expect_list <- function(x){
 # length(0) x (done)
 # length(1) x (done)
 # factor with only one level (done)
-# character with > 50 unique values (serious?)
+# character with > 50 unique values (seriously?, but done)
 
 test_that("n_mean_var works for numeric values", {
   expect_list(rnorm(10))
@@ -53,7 +53,12 @@ test_that("n_mean_var works for factor with only 1 level", {
   expect_list(factor(c(1,1,1,1,1,1)))
 })
 
-x <- c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
-test_that("n_mean_var works for 26 unique values", {
+
+char_generator <- function(n){
+  paste0(sample(letters, n, replace = TRUE), sample(999, n))
+}
+
+x <- char_generator(51)
+test_that("n_mean_var works for >50 unique values", {
   expect_list(x)
 })
