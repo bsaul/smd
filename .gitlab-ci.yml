@@ -1,4 +1,4 @@
-image: rocker/tidyverse:3.5.1
+image: rocker/verse
 
 stages:
   - testing
