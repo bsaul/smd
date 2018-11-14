@@ -4,7 +4,7 @@
 \alias{compute_smd_parts}
 \title{Compute components of SMD}
 \usage{
-compute_smd_parts(x, g, tapplyMethod = tapply, tapplyFUN = mean_var,
+compute_smd_parts(x, g, tapplyMethod = tapply, tapplyFUN = n_mean_var,
   tapplyArgs = list())
 }
 \arguments{
@@ -13,7 +13,7 @@ compute_smd_parts(x, g, tapplyMethod = tapply, tapplyFUN = mean_var,
 \item{g}{a vector of groupings to compare}
 
 \item{tapplyMethod}{either \code{tapply} or \code{\link[fastmatch]{ctapply}}.
-Defaults to \code{\link[fastmatch]{ctapply}}.}
+Defaults to \code{\link[base]{tapply}}}
 
 \item{tapplyFUN}{the \code{FUN} argument passed to \code{tapplyMethod}}
 

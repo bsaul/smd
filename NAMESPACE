@@ -3,7 +3,4 @@
 export(smd)
 exportMethods(smd)
 importFrom(MASS,ginv)
-importFrom(fastmatch,ctapply)
-importFrom(purrr,map)
-importFrom(purrr,map_dbl)
 importFrom(stats,var)

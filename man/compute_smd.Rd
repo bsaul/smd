@@ -2,11 +2,18 @@
 % Please edit documentation in R/smd.R
 \name{compute_smd}
 \alias{compute_smd}
+\alias{compute_smd_pairwise}
+\alias{compute_smd}
 \title{Compute the standardized mean difference}
 \usage{
+compute_smd_pairwise(smd_parts)
+
 compute_smd(D, S)
 }
 \arguments{
+\item{smd_parts}{a \code{list} of components for from \code{\link{compute_smd_parts}}
+computing standardized mean differences}
+
 \item{D}{vector of differences for each level of a factor (will be length 1 for numeric values)}
 
 \item{S}{the covariance matrix}

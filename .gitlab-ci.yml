@@ -1,0 +1,21 @@
+image: rocker/verse
+
+stages:
+  - testing
+#  - coverage
+
+testing:
+  stage: testing
+  script:
+    - R -e 'install.packages(c("fastmatch", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
+# args = c("--no-vignettes", "--no-build-vignettes"),build_args = c("--no-build-vignettes", "--compact-vignettes=no"))'
+    - R -e 'devtools::check(manual = FALSE)'
+
+# Turning off coverage for now: getting smd() matches other packages failures
+# and not sure why
+#coverage:
+#  stage: coverage
+#  dependencies:
+#    - testing
+#  script:
+#    - R -e 'covr::package_coverage(type = c("tests", "examples"))'
