@@ -1,4 +1,4 @@
-image: rocker/tidyverse
+image: rocker/tidyverse:3.5.1
 
 stages:
   - testing
@@ -7,7 +7,6 @@ stages:
 testing:
   stage: testing
   script:
-    - apt-get install -y --no-install-recommends qpdf
     - R -e 'install.packages(c("fastmatch", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
     - R -e 'devtools::check(manual = FALSE, args = c("--no-vignettes", "--no-build-vignettes"),build_args = c("--no-build-vignettes", "--compact-vignettes=no"))'
 
