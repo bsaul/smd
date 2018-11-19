@@ -3,7 +3,6 @@
 \name{compute_smd}
 \alias{compute_smd}
 \alias{compute_smd_pairwise}
-\alias{compute_smd}
 \title{Compute the standardized mean difference}
 \usage{
 compute_smd_pairwise(smd_parts)

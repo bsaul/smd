@@ -19,56 +19,120 @@ multinom_var <- function(p){
 #'
 #' @name n_mean_var
 #' @param x a vector of values
+#' @param w an optional vector of \code{numeric} weights
 #' @importFrom stats var
 #' @return a list containing \code{mean} and \code{var}
 
-setGeneric("n_mean_var", def = function(x) {
+setGeneric("n_mean_var", def = function(x, w = NULL){
   standardGeneric("n_mean_var")
+
 })
 
 #' @rdname n_mean_var
 
 setMethod(
   f          = "n_mean_var",
-  signature  = "numeric",
-  definition = function(x){
-    list(n = length(x), mean = mean(x), var = stats::var(x))
+  signature  = c("numeric", "missing"),
+  definition = function(x, w){
+
+    n  <- length(x)
+    mean <- sum(x)/n
+
+    list(
+      n    = n,
+      mean = mean,
+      var  = sum((x - mean)^2)/n
+    )
 } )
 
 setMethod(
   f          = "n_mean_var",
-  signature  = "integer",
-  definition = function(x){
+  signature  = c("numeric", "numeric"),
+  definition = function(x, w){
+
+    if(length(x) != length(w)){
+      stop("x and w must have same length")
+    }
+
+    xw   <- x * w
+    n    <- sum(w)
+    mean <- sum(xw)/n
+
+    list(
+      n    = n,
+      mean = mean,
+      var  = sum((xw - mean)^2)/n
+    )
+})
+
+
+#' @rdname n_mean_var
+
+setMethod(
+  f          = "n_mean_var",
+  signature  = c("integer", "missing"),
+  definition = function(x, w){
 
     check_for_two_levels(x)
-    list(n = length(x), mean = mean(x), var = stats::var(x))
-} )
+    n_mean_var(as.numeric(x))
+})
 
 #' @rdname n_mean_var
 
 setMethod(
   f          = "n_mean_var",
-  signature  = "logical",
-  definition = function(x){
-    list(n = length(x), mean = mean(x), var = stats::var(x))
-} )
+  signature  = c("integer", "numeric"),
+  definition = function(x, w){
+
+    check_for_two_levels(x)
+    n_mean_var(as.numeric(x), w)
+})
 
 #' @rdname n_mean_var
 
 setMethod(
   f          = "n_mean_var",
-  signature  = "factor",
+  signature  = c("logical", "missing"),
   definition = function(x){
+    n_mean_var(as.numeric(x))
+})
+
+#' @rdname n_mean_var
+
+setMethod(
+  f          = "n_mean_var",
+  signature  = c("logical", "numeric"),
+  definition = function(x, w){
+    n_mean_var(as.numeric(x), w)
+})
+
+#' @rdname n_mean_var
+
+setMethod(
+  f          = "n_mean_var",
+  signature  = c("factor", "missing"),
+  definition = function(x, w){
     p <- prop.table(table(x))
     list(n = length(x), mean = p, var = multinom_var(p))
+})
+
+#' @rdname n_mean_var
+
+setMethod(
+  f          = "n_mean_var",
+  signature  = c("factor", "numeric"),
+  definition = function(x, w){
+    n <- sum(w)
+    p <-tapply(w, x, function(r) sum(r)/n)
+    list(n = n, mean = p, var = multinom_var(p))
   })
 
 #' @rdname n_mean_var
 
 setMethod(
   f          = "n_mean_var",
-  signature  = "character",
-  definition = function(x){
+  signature  = c("character", "missing"),
+  definition = function(x, w){
     x <- as.factor(x)
 
     if(nlevels(x) > 50){
@@ -78,6 +142,20 @@ setMethod(
     n_mean_var(x)
 })
 
+#' @rdname n_mean_var
+
+setMethod(
+  f          = "n_mean_var",
+  signature  = c("character", "numeric"),
+  definition = function(x, w){
+    x <- as.factor(x)
+
+    if(nlevels(x) > 50){
+      warning("x has more than 50 levels. Are you sure you meant for this?")
+    }
+
+    n_mean_var(x, w)
+  })
 
 
 

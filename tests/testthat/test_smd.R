@@ -11,7 +11,7 @@ context("Testing the smd() functions")
 
 compare_packages <- function(data){
 
-  smdval <- abs(smd(data$x, data$g)$estimate)
+  smdval <- abs(smd(x = data$x, g = data$g)$estimate)
   # compare to TableOne package
   # NOTE: for boolean variables in small datasets, tableone and smd will have
   # small differences due the way the variance is computed.
@@ -89,8 +89,6 @@ test_that("smd() works/does not as appropriate with data.frames", {
   X <- as.data.frame(replicate(rnorm(20), n = 5, simplify = FALSE), col.names = 1:5)
   g <- rep(c("A", "B"), each = 10)
   expect_is(smd(x = X, g = g), "data.frame")
-
-
 })
 
 test_that("smd() gives error on if x and g have different length", {
