@@ -4,6 +4,7 @@
 #'
 #' @name smd
 #' @param x a vector of values
+#' @param w a vector of weights (optional)
 #' @param g a vector of groupings to compare
 #' @param std.error Logical indicator for computing standard errors using
 #' \code{\link{compute_smd_var}}
@@ -18,13 +19,13 @@
 
 setGeneric(
   "smd",
-  def = function(x, g, std.error = FALSE){
-    parts <- compute_smd_parts(x, g)
+  def = function(x, g, w, std.error = FALSE){
+    parts <- compute_smd_parts(.x = x, .g = g, .w = w,)
     d     <- compute_smd_pairwise(parts)
     out   <- list(term = names(d), estimate = unname(d))
 
     if(std.error){
-      ste <- unlist(Map(compute_smd_var,d = d, smd_parts = parts))
+      ste <- unlist(Map(compute_smd_var, d = d, smd_parts = parts))
       out <- append(out, list(std.error = unname(sqrt(ste))))
     }
 
@@ -37,9 +38,9 @@ setGeneric(
 
 setMethod(
   "smd",
-  signature = "character",
-  def = function(x, g, std.error = FALSE){
-    smd(as.factor(x), g = g, std.error = std.error)
+  signature = c("character", "ANY", "missing"),
+  def = function(x, g, w, std.error = FALSE){
+    smd(x = as.factor(x), g = g, std.error = std.error)
   }
 )
 
@@ -48,9 +49,9 @@ setMethod(
 
 setMethod(
   "smd",
-  signature = "logical",
-  def = function(x, g, std.error = FALSE){
-    smd(as.numeric(x), g = g, std.error = std.error)
+  signature = c("character", "ANY", "numeric"),
+  def = function(x, g, w, std.error = FALSE){
+    smd(x = as.factor(x), g = g, w = w,std.error = std.error)
   }
 )
 
@@ -59,8 +60,30 @@ setMethod(
 
 setMethod(
   "smd",
-  signature = "matrix",
-  def = function(x, g, std.error = FALSE){
+  signature = c("logical", "ANY", "missing"),
+  def = function(x, g, w, std.error = FALSE){
+    smd(x = as.numeric(x), g = g, std.error = std.error)
+  }
+)
+
+#' @rdname smd
+#' @export
+
+setMethod(
+  "smd",
+  signature = c("logical", "ANY", "numeric"),
+  def = function(x, g, w, std.error = FALSE){
+    smd(x = as.numeric(x), g = g, w = w, std.error = std.error)
+  }
+)
+
+#' @rdname smd
+#' @export
+
+setMethod(
+  "smd",
+  signature = c("matrix", "ANY",  "missing"),
+  def = function(x, g, w, std.error = FALSE){
     if(std.error){
       stop("smd is not set up to compute std.error on a matrix")
     }
@@ -73,8 +96,22 @@ setMethod(
 
 setMethod(
   "smd",
-  signature = "list",
-  def = function(x, g, std.error = FALSE){
+  signature = c("matrix", "ANY", "numeric"),
+  def = function(x, g, w, std.error = FALSE){
+    if(std.error){
+      stop("smd is not set up to compute std.error on a matrix")
+    }
+    apply(x, 2, function(j) simplify2array(smd(x = j, w = w, g = g, std.error = std.error)$estimate))
+  }
+)
+
+#' @rdname smd
+#' @export
+
+setMethod(
+  "smd",
+  signature = c("list", "ANY", "missing"),
+  def = function(x, g, w, std.error = FALSE){
 
     tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error)))
   }
@@ -85,10 +122,34 @@ setMethod(
 
 setMethod(
   "smd",
-  signature = "data.frame",
-  def = function(x, g, std.error = FALSE){
+  signature = c("list",  "ANY", "numeric"),
+  def = function(x, g, w, std.error = FALSE){
+
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, w = w, std.error = std.error)))
+  }
+)
+
+#' @rdname smd
+#' @export
+
+setMethod(
+  "smd",
+  signature = c("data.frame", "ANY", "missing"),
+  def = function(x, g, w, std.error = FALSE){
 
     tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error)))
+  }
+)
+
+#' @rdname smd
+#' @export
+
+setMethod(
+  "smd",
+  signature = c("data.frame", "ANY", "numeric"),
+  def = function(x, g, w, std.error = FALSE){
+
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g,  w = w, std.error = std.error)))
   }
 )
 
@@ -139,7 +200,7 @@ compute_smd_pairwise <- function(smd_parts){
 #' @rdname compute_smd
 
 compute_smd <- function(D, S){
-  out <- sqrt(t(D) %*% MASS::ginv(S) %*% D)
+  out <- sqrt(t(D) %*% (MASS::ginv(S) %*% D))
   if(length(D) == 1){
     out <- out * sign(D)
   }
@@ -169,23 +230,21 @@ compute_smd_var <- function(d, smd_parts){
 #'
 #' Computes \code{D} and \code{S} for use within \link{compute_smd}.
 #'
-#' @inheritParams smd
-#' @param tapplyMethod either \code{tapply} or \code{\link[fastmatch]{ctapply}}.
-#' Defaults to \code{\link[base]{tapply}}
-#' @param tapplyFUN the \code{FUN} argument passed to \code{tapplyMethod}
-#' @param tapplyArgs a \code{list} of arguments passed to \code{tapplyMethod}
+#' @param .x a vector of values
+#' @param .w a vector of weights (optional)
+#' @param .g a vector of groupings to compare
+#' @param applyFUN the \code{FUN} used to compute the SMD parts. Defaults to
+#' \code{\link{n_mean_var}}
 
-compute_smd_parts <- function(x, g,
-                              tapplyMethod = tapply,
-                              tapplyFUN    = n_mean_var,
-                              tapplyArgs   = list()){
+compute_smd_parts <- function(.x, .g, .w,
+                              applyFUN = n_mean_var){
 
   # Checks
-  if(length(x) != length(g)){
+  if(length(.x) != length(.g)){
     stop("Length of x and g must match")
   }
 
-  ng  <- length(unique(g))
+  ng  <- length(unique(.g))
 
   if(ng < 2){
     stop("g must contain at least two levels.")
@@ -193,10 +252,11 @@ compute_smd_parts <- function(x, g,
 
   ref <- 1 # TODO be able to take reference argument
 
-  args <- append(list(X = x, INDEX = g, FUN = tapplyFUN), tapplyArgs)
+  ll  <- split.data.frame(cbind(x = .x, w = {if(missing(.w)) NULL else .w}), f = .g)
+  U   <- simplify2array(lapply(ll, function(M) {
+    do.call(applyFUN, args = split(M, colnames(M)))
+  }))
 
-  # Collect necessary values
-  U <- simplify2array(do.call(tapplyMethod, args = args))
   # Create pairwise components
   N <- lapplyFUNpairwise(U["n", ], c, ref)
   D <- lapplyFUNpairwise(U["mean", ], `-`, ref)

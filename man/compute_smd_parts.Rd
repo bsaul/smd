@@ -4,20 +4,17 @@
 \alias{compute_smd_parts}
 \title{Compute components of SMD}
 \usage{
-compute_smd_parts(x, g, tapplyMethod = tapply, tapplyFUN = n_mean_var,
-  tapplyArgs = list())
+compute_smd_parts(.x, .g, .w, applyFUN = n_mean_var)
 }
 \arguments{
-\item{x}{a vector of values}
+\item{.x}{a vector of values}
 
-\item{g}{a vector of groupings to compare}
+\item{.g}{a vector of groupings to compare}
 
-\item{tapplyMethod}{either \code{tapply} or \code{\link[fastmatch]{ctapply}}.
-Defaults to \code{\link[base]{tapply}}}
+\item{.w}{a vector of weights (optional)}
 
-\item{tapplyFUN}{the \code{FUN} argument passed to \code{tapplyMethod}}
-
-\item{tapplyArgs}{a \code{list} of arguments passed to \code{tapplyMethod}}
+\item{applyFUN}{the \code{FUN} used to compute the SMD parts. Defaults to
+\code{\link{n_mean_var}}}
 }
 \description{
 Computes \code{D} and \code{S} for use within \link{compute_smd}.
