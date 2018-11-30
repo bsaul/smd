@@ -56,12 +56,13 @@ setMethod(
 
     xw   <- x * w
     n    <- sum(w)
-    mean <- sum(xw)/n
+    # Handle case were sum of weights is 0
+    mean <- if(n == 0) 0 else sum(xw)/n
 
     list(
       n    = n,
       mean = mean,
-      var  = sum((xw - mean)^2)/n
+      var  = if(n == 0) 0 else sum((xw - mean)^2)/n
     )
 })
 
