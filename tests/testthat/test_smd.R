@@ -11,7 +11,7 @@ context("Testing the smd() functions")
 
 compare_packages <- function(data){
 
-  smdval <- abs(smd(data$x, data$g)$estimate)
+  smdval <- abs(smd(x = data$x, g = data$g)$estimate)
   # compare to TableOne package
   # NOTE: for boolean variables in small datasets, tableone and smd will have
   # small differences due the way the variance is computed.
@@ -69,6 +69,62 @@ for(i in seq_along(dg)){
 
 
 ##
+test_that("smd() returns correct values in specific cases", {
+  x <- rep(0, 10)
+  g <- rep(c("A", "B"), each = 5)
+  w <- rep(0:1, each = 5)
+  # means in both groups are 0; some weights are 0;
+  expect_equal(smd(x, g, w)$estimate, 0)
+
+  # means in one group is not 0; some weights are 0;
+  x <- rep(0:1, times = c(7, 3))
+  gBx <- c(0, 0, 1, 1, 1)
+  expect_equal(smd(x, g, w)$estimate, -0.6/sqrt((var(gBx) * 4 /5)/ 2))
+
+  # means in one group is not 0; some weights are 0;
+  x <- rep(0:1, times = c(7, 3))
+  w <- rep(0:1, times = c(6, 4))
+  gBx <- c(0, 0, 1, 1, 1)
+  expect_equal(smd(x, g, w)$estimate, -0.75/sqrt( (sum((gBx - 0.75)^2)/4)/2) )
+
+  # means in one group is not 0; some weights are 0;
+  x <- rep(0:1, times = c(7, 3))
+  w <- c(rep(0:1, times = c(6, 3)), 0)
+  gBx <- c(0, 0, 1, 1, 1)
+  expect_equal(smd(x, g, w)$estimate, -(2/3)/sqrt( (sum((gBx*w[6:10] - (2/3))^2)/3)/2) )
+
+  # means in both group is not 0; some weights are 0;
+  x <- rep(c(0, 1, 1, 1, 1), times = 2)
+  w <- rep(c(0, 1, 1, 1, 0), times = 2)
+
+  expect_equal(smd(x, g, w)$estimate, 0)
+
+  ## Checking factors
+  x <- factor(rep(LETTERS[1:4], times = 4))
+  g <- rep(c("a", "b"), each = 8)
+  w <- c(rep(0:1, times = 4), rep(0:1, each = 4))
+
+  ra <- c(0, .5, 0, .5)
+  SSa <- diag(ra) - outer(ra, ra)
+  rb <- c(.25, .25, .25, 0.25)
+  SSb <- diag(rb) - outer(rb, rb)
+  d <- ra - rb
+  SS <- (SSa + SSb)/2
+
+  expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w)$estimate, check.attributes = FALSE)
+
+  w <- rep(0:1, each = 8)
+  ra <- c(0, 0, 0, 0)
+  SSa <- diag(ra) - outer(ra, ra)
+  rb <- c(.25, .25, .25, 0.25)
+  SSb <- diag(rb) - outer(rb, rb)
+  d <- ra - rb
+  SS <- (SSa + SSb)/2
+
+  expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w)$estimate, check.attributes = FALSE)
+
+})
+
 
 test_that("smd() works/does not as appropriate with matrices", {
   X <- matrix(rnorm(100), ncol = 5)
@@ -89,8 +145,6 @@ test_that("smd() works/does not as appropriate with data.frames", {
   X <- as.data.frame(replicate(rnorm(20), n = 5, simplify = FALSE), col.names = 1:5)
   g <- rep(c("A", "B"), each = 10)
   expect_is(smd(x = X, g = g), "data.frame")
-
-
 })
 
 test_that("smd() gives error on if x and g have different length", {

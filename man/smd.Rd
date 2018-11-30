@@ -3,29 +3,46 @@
 \docType{methods}
 \name{smd}
 \alias{smd}
-\alias{smd,character-method}
-\alias{smd,logical-method}
-\alias{smd,matrix-method}
-\alias{smd,list-method}
-\alias{smd,data.frame-method}
+\alias{smd,character,ANY,missing-method}
+\alias{smd,character,ANY,numeric-method}
+\alias{smd,logical,ANY,missing-method}
+\alias{smd,logical,ANY,numeric-method}
+\alias{smd,matrix,ANY,missing-method}
+\alias{smd,matrix,ANY,numeric-method}
+\alias{smd,list,ANY,missing-method}
+\alias{smd,list,ANY,numeric-method}
+\alias{smd,data.frame,ANY,missing-method}
+\alias{smd,data.frame,ANY,numeric-method}
 \title{Compute Standardized Mean Difference}
 \usage{
-smd(x, g, std.error = FALSE)
+smd(x, g, w, std.error = FALSE)
 
-\S4method{smd}{character}(x, g, std.error = FALSE)
+\S4method{smd}{character,ANY,missing}(x, g, w, std.error = FALSE)
 
-\S4method{smd}{logical}(x, g, std.error = FALSE)
+\S4method{smd}{character,ANY,numeric}(x, g, w, std.error = FALSE)
 
-\S4method{smd}{matrix}(x, g, std.error = FALSE)
+\S4method{smd}{logical,ANY,missing}(x, g, w, std.error = FALSE)
 
-\S4method{smd}{list}(x, g, std.error = FALSE)
+\S4method{smd}{logical,ANY,numeric}(x, g, w, std.error = FALSE)
 
-\S4method{smd}{data.frame}(x, g, std.error = FALSE)
+\S4method{smd}{matrix,ANY,missing}(x, g, w, std.error = FALSE)
+
+\S4method{smd}{matrix,ANY,numeric}(x, g, w, std.error = FALSE)
+
+\S4method{smd}{list,ANY,missing}(x, g, w, std.error = FALSE)
+
+\S4method{smd}{list,ANY,numeric}(x, g, w, std.error = FALSE)
+
+\S4method{smd}{data.frame,ANY,missing}(x, g, w, std.error = FALSE)
+
+\S4method{smd}{data.frame,ANY,numeric}(x, g, w, std.error = FALSE)
 }
 \arguments{
 \item{x}{a vector of values}
 
 \item{g}{a vector of groupings to compare}
+
+\item{w}{a vector of weights (optional)}
 
 \item{std.error}{Logical indicator for computing standard errors using
 \code{\link{compute_smd_var}}}
