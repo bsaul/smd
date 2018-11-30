@@ -59,6 +59,8 @@ setMethod(
     # Handle case were sum of weights is 0
     mean <- if(n == 0) 0 else sum(xw)/n
 
+    # browser()
+
     list(
       n    = n,
       mean = mean,
@@ -124,7 +126,7 @@ setMethod(
   signature  = c("factor", "numeric"),
   definition = function(x, w){
     n <- sum(w)
-    p <-tapply(w, x, function(r) sum(r)/n)
+    p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n)
     list(n = n, mean = p, var = multinom_var(p))
   })
 
