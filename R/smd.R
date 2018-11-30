@@ -221,6 +221,7 @@ compute_smd <- function(D, S){
 #'
 
 compute_smd_var <- function(d, smd_parts){
+  warning("smd variance computations have not been rigorously tested.")
   N <- smd_parts$N
   sn <- sum(N)
   sn/prod(N) + (d^2)/(2*sn)
@@ -252,13 +253,21 @@ compute_smd_parts <- function(.x, .g, .w,
 
   ref <- 1 # TODO be able to take reference argument
 
-  ll  <- split.data.frame(cbind(x = .x, w = {if(missing(.w)) NULL else .w}), f = .g)
+  # 20181130 - These next few lines (creating the object U) are critical and
+  # surprisingly challenging to get right in a nice way. But what needs to happen:
+  # * x needs to get split by g
+  # * if w exists it also needs to get split by g
+  # * the vectors x and w may be different types so that can't be cbind()ed
+  #   before splitting without unintended coersion.
+  # So my current tack is to combine them into a data.frame first.
+  dd  <- data.frame(x = .x)
+  dd$w <- if(missing(.w)) NULL else .w
+  ll  <- split.data.frame(dd, f = .g)
   U   <- simplify2array(lapply(ll, function(M){
-    ARGS <- split(M, col(M))
-    names(ARGS) <- colnames(M)
-    do.call(applyFUN, args = ARGS)
+    do.call(applyFUN, args = M)
   }))
 
+  # browser()
   # Create pairwise components
   N <- lapplyFUNpairwise(U["n", ], c, ref)
   D <- lapplyFUNpairwise(U["mean", ], `-`, ref)
