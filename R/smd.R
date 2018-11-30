@@ -253,8 +253,10 @@ compute_smd_parts <- function(.x, .g, .w,
   ref <- 1 # TODO be able to take reference argument
 
   ll  <- split.data.frame(cbind(x = .x, w = {if(missing(.w)) NULL else .w}), f = .g)
-  U   <- simplify2array(lapply(ll, function(M) {
-    do.call(applyFUN, args = split(M, colnames(M)))
+  U   <- simplify2array(lapply(ll, function(M){
+    ARGS <- split(M, col(M))
+    names(ARGS) <- colnames(M)
+    do.call(applyFUN, args = ARGS)
   }))
 
   # Create pairwise components
