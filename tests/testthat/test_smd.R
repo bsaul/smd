@@ -187,3 +187,12 @@ test_that("smd() runs if g is unsorted factor (and character) levels", {
 })
 
 
+test_that("smd() runs with NA values", {
+  g <- rep(c("A", "B"), each = 30)
+  x <- rnorm(60)
+  x[sample(1:60, 5)] <- NA
+  expect_error(smd(x, g, na.rm = FALSE))
+  expect_is(smd(x, g, na.rm = TRUE), "data.frame")
+
+})
+
