@@ -14,30 +14,32 @@
 \alias{n_mean_var,character,numeric-method}
 \title{Compute n, mean and variance}
 \usage{
-n_mean_var(x, w = NULL)
+n_mean_var(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{numeric,missing}(x, w = NULL)
+\S4method{n_mean_var}{numeric,missing}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{integer,missing}(x, w = NULL)
+\S4method{n_mean_var}{integer,missing}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{integer,numeric}(x, w = NULL)
+\S4method{n_mean_var}{integer,numeric}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{logical,missing}(x)
+\S4method{n_mean_var}{logical,missing}(x, na.rm = FALSE)
 
-\S4method{n_mean_var}{logical,numeric}(x, w = NULL)
+\S4method{n_mean_var}{logical,numeric}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{factor,missing}(x, w = NULL)
+\S4method{n_mean_var}{factor,missing}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{factor,numeric}(x, w = NULL)
+\S4method{n_mean_var}{factor,numeric}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{character,missing}(x, w = NULL)
+\S4method{n_mean_var}{character,missing}(x, w = NULL, na.rm = FALSE)
 
-\S4method{n_mean_var}{character,numeric}(x, w = NULL)
+\S4method{n_mean_var}{character,numeric}(x, w = NULL, na.rm = TRUE)
 }
 \arguments{
 \item{x}{a vector of values}
 
 \item{w}{an optional vector of \code{numeric} weights}
+
+\item{na.rm}{passed to \code{var} and \code{sum}}
 }
 \value{
 a list containing \code{mean} and \code{var}

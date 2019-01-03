@@ -4,7 +4,7 @@
 \alias{compute_smd_parts}
 \title{Compute components of SMD}
 \usage{
-compute_smd_parts(.x, .g, .w, applyFUN = n_mean_var)
+compute_smd_parts(.x, .g, .w, .na, applyFUN = n_mean_var)
 }
 \arguments{
 \item{.x}{a vector of values}
@@ -12,6 +12,8 @@ compute_smd_parts(.x, .g, .w, applyFUN = n_mean_var)
 \item{.g}{a vector of groupings to compare}
 
 \item{.w}{a vector of weights (optional)}
+
+\item{.na}{\code{TRUE/FALSE}. \code{NA} handling}
 
 \item{applyFUN}{the \code{FUN} used to compute the SMD parts. Defaults to
 \code{\link{n_mean_var}}}
