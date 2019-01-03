@@ -7,6 +7,7 @@
 #' @param w a vector of weights (optional)
 #' @param g a vector of groupings to compare
 #' @param std.error Logical indicator for computing standard errors using
+#' @param na.rm remove \code{NA} values from \code{x}? Defaults to \code{FALSE}.
 #' \code{\link{compute_smd_var}}
 #' @return the standardized mean differences between levels of \code{g}
 #' for values of \code{x}
@@ -19,8 +20,8 @@
 
 setGeneric(
   "smd",
-  def = function(x, g, w, std.error = FALSE){
-    parts <- compute_smd_parts(.x = x, .g = g, .w = w,)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
+    parts <- compute_smd_parts(.x = x, .g = g, .w = w, .na = na.rm)
     d     <- compute_smd_pairwise(parts)
     out   <- list(term = names(d), estimate = unname(d))
 
@@ -39,8 +40,8 @@ setGeneric(
 setMethod(
   "smd",
   signature = c("character", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE){
-    smd(x = as.factor(x), g = g, std.error = std.error)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
+    smd(x = as.factor(x), g = g, std.error = std.error, na.rm = na.rm)
   }
 )
 
@@ -50,8 +51,8 @@ setMethod(
 setMethod(
   "smd",
   signature = c("character", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE){
-    smd(x = as.factor(x), g = g, w = w,std.error = std.error)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
+    smd(x = as.factor(x), g = g, w = w, std.error = std.error, na.rm = FALSE)
   }
 )
 
@@ -61,8 +62,8 @@ setMethod(
 setMethod(
   "smd",
   signature = c("logical", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE){
-    smd(x = as.numeric(x), g = g, std.error = std.error)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
+    smd(x = as.numeric(x), g = g, std.error = std.error, na.rm = na.rm)
   }
 )
 
@@ -72,8 +73,8 @@ setMethod(
 setMethod(
   "smd",
   signature = c("logical", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE){
-    smd(x = as.numeric(x), g = g, w = w, std.error = std.error)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
+    smd(x = as.numeric(x), g = g, w = w, std.error = std.error, na.rm = na.rm)
   }
 )
 
@@ -83,11 +84,15 @@ setMethod(
 setMethod(
   "smd",
   signature = c("matrix", "ANY",  "missing"),
-  def = function(x, g, w, std.error = FALSE){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
+
     if(std.error){
       stop("smd is not set up to compute std.error on a matrix")
     }
-    apply(x, 2, function(j) simplify2array(smd(x = j, g = g, std.error = std.error)$estimate))
+
+    apply(x, 2, function(j) {
+      simplify2array(smd(x = j, g = g, std.error = std.error, na.rm = na.rm)$estimate)
+    })
   }
 )
 
@@ -97,11 +102,14 @@ setMethod(
 setMethod(
   "smd",
   signature = c("matrix", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
     if(std.error){
       stop("smd is not set up to compute std.error on a matrix")
     }
-    apply(x, 2, function(j) simplify2array(smd(x = j, w = w, g = g, std.error = std.error)$estimate))
+
+    apply(x, 2, function(j) {
+      simplify2array(smd(x = j, w = w, g = g, std.error = std.error, na.rm = na.rm)$estimate)
+    })
   }
 )
 
@@ -111,9 +119,9 @@ setMethod(
 setMethod(
   "smd",
   signature = c("list", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
 
-    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error)))
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error, na.rm = na.rm)))
   }
 )
 
@@ -123,9 +131,9 @@ setMethod(
 setMethod(
   "smd",
   signature = c("list",  "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
 
-    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, w = w, std.error = std.error)))
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, w = w, std.error = std.error, na.rm = na.rm)))
   }
 )
 
@@ -135,9 +143,9 @@ setMethod(
 setMethod(
   "smd",
   signature = c("data.frame", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
 
-    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error)))
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g, std.error = std.error, na.rm = na.rm)))
   }
 )
 
@@ -147,9 +155,9 @@ setMethod(
 setMethod(
   "smd",
   signature = c("data.frame", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE){
 
-    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g,  w = w, std.error = std.error)))
+    tidy_smd_multiplevar(lapply(x, function(z) smd(x = z, g = g,  w = w, std.error = std.error, na.rm = na.rm)))
   }
 )
 
@@ -234,15 +242,20 @@ compute_smd_var <- function(d, smd_parts){
 #' @param .x a vector of values
 #' @param .w a vector of weights (optional)
 #' @param .g a vector of groupings to compare
+#' @param .na \code{TRUE/FALSE}. \code{NA} handling
 #' @param applyFUN the \code{FUN} used to compute the SMD parts. Defaults to
 #' \code{\link{n_mean_var}}
 
-compute_smd_parts <- function(.x, .g, .w,
+compute_smd_parts <- function(.x, .g, .w, .na,
                               applyFUN = n_mean_var){
 
   # Checks
   if(length(.x) != length(.g)){
     stop("Length of x and g must match")
+  }
+
+  if(anyNA(.x) && !.na){
+    stop("x contains NA values. Do you need to set na.rm = TRUE?")
   }
 
   ng  <- length(unique(.g))
@@ -264,7 +277,7 @@ compute_smd_parts <- function(.x, .g, .w,
   dd$w <- if(missing(.w)) NULL else .w
   ll  <- split.data.frame(dd, f = .g)
   U   <- simplify2array(lapply(ll, function(M){
-    do.call(applyFUN, args = M)
+    do.call(applyFUN, args = append(M, list(na.rm = .na)))
   }))
 
   # browser()
