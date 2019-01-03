@@ -15,27 +15,17 @@ compare_packages <- function(data){
   # compare to TableOne package
   # NOTE: for boolean variables in small datasets, tableone and smd will have
   # small differences due the way the variance is computed.
-
-  if(is.logical(data$x)){
-    expect_equal(
-      smdval,
-      tableone::ExtractSmd(tableone::CreateTableOne("x", "g", data)),
-      tolerance = 0.001,
-      check.attributes = FALSE
-    )
-  } else {
-    expect_equal(
-      smdval,
-      tableone::ExtractSmd(tableone::CreateTableOne("x", "g", data)),
-      check.attributes = FALSE
-    )
-  }
-
-
+  expect_equal(
+    smdval,
+    tableone::ExtractSmd(tableone::CreateTableOne("x", "g", data)),
+    tolerance = 0.01,
+    check.attributes = FALSE
+  )
   # compare stddiff package
   expect_equal(
     round(smdval, 3), #Not sure why stddiff rounds, but it does
-    stddiff::stddiff.numeric(data,"g","x")[7])
+    stddiff::stddiff.numeric(data,"g","x")[7],
+    tolerance = 0.01)
 }
 
 set.seed(123)
@@ -60,7 +50,7 @@ for(i in seq_along(dg)){
   test_that(sprintf("smd() matches other packages for %s values", dg[[i]]$type), {
     dt <- data.frame(
         g = rep(c("A", "B"), each = 30),
-        x = dg[[5]]$x
+        x = dg[[i]]$x
       )
     compare_packages(dt)
   })
@@ -187,3 +177,45 @@ test_that("smd() runs if g is unsorted factor (and character) levels", {
 })
 
 
+test_that("smd() runs with NA values", {
+  g <- rep(c("A", "B"), each = 30)
+  x <- rnorm(60)
+  x[sample(1:60, 5)] <- NA
+  expect_error(smd(x, g, na.rm = FALSE))
+  expect_is(smd(x, g, na.rm = TRUE), "data.frame")
+
+})
+
+
+test_that("smd() works when changing gref (reference group)", {
+  g <- rep(c("A", "B"), each = 30)
+  x <- rnorm(60)
+  expect_equal(smd(x, g, gref = 1)$estimate, -smd(x, g, gref = 2)$estimate)
+
+  g <- rep(1:2, each = 30)
+  x <- rnorm(60)
+  expect_equal(smd(x, g, gref = 1)$estimate, -smd(x, g, gref = 2)$estimate)
+
+  g <- rep(1:3, each = 20)
+  x <- rnorm(60)
+  expect_equal(smd(x, g, gref = 1)$estimate[2], -smd(x, g, gref = 3)$estimate[1])
+})
+
+
+for(i in c(1,3:length(dg))){
+  # Skipping the integer check: this gives a check_for_two_levels warning()
+  # TODO: how to do I want to handle this case?
+
+
+  test_that(sprintf("smd() runs for various data type %s", dg[[i]]$type), {
+    dt <- data.frame(
+      g = rep(c("A", "B", "C"), each = 20),
+      x = dg[[i]]$x
+    )
+
+   expect_is(smd(dt$x, dt$g, gref = 1), "data.frame")
+   expect_is(smd(dt$x, dt$g, gref = 2), "data.frame")
+   expect_is(smd(dt$x, dt$g, gref = 3), "data.frame")
+  })
+
+}

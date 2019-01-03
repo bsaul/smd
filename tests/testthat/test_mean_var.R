@@ -95,3 +95,12 @@ x <- char_generator(51)
 test_that("n_mean_var works for >50 unique values", {
   expect_warning(n_mean_var(x), "more than 50 levels")
 })
+
+## n_mean_var with missing values
+
+test_that("n_mean_var runs with NA values", {
+  expect_is(
+    n_mean_var(x = c(TRUE, TRUE, FALSE, NA), w = c(0, 1, 1, 0), na.rm = TRUE),
+    "list")
+})
+

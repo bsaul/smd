@@ -15,27 +15,37 @@
 \alias{smd,data.frame,ANY,numeric-method}
 \title{Compute Standardized Mean Difference}
 \usage{
-smd(x, g, w, std.error = FALSE)
+smd(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{character,ANY,missing}(x, g, w, std.error = FALSE)
+\S4method{smd}{character,ANY,missing}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{character,ANY,numeric}(x, g, w, std.error = FALSE)
+\S4method{smd}{character,ANY,numeric}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{logical,ANY,missing}(x, g, w, std.error = FALSE)
+\S4method{smd}{logical,ANY,missing}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{logical,ANY,numeric}(x, g, w, std.error = FALSE)
+\S4method{smd}{logical,ANY,numeric}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{matrix,ANY,missing}(x, g, w, std.error = FALSE)
+\S4method{smd}{matrix,ANY,missing}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{matrix,ANY,numeric}(x, g, w, std.error = FALSE)
+\S4method{smd}{matrix,ANY,numeric}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{list,ANY,missing}(x, g, w, std.error = FALSE)
+\S4method{smd}{list,ANY,missing}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{list,ANY,numeric}(x, g, w, std.error = FALSE)
+\S4method{smd}{list,ANY,numeric}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{data.frame,ANY,missing}(x, g, w, std.error = FALSE)
+\S4method{smd}{data.frame,ANY,missing}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 
-\S4method{smd}{data.frame,ANY,numeric}(x, g, w, std.error = FALSE)
+\S4method{smd}{data.frame,ANY,numeric}(x, g, w, std.error = FALSE,
+  na.rm = FALSE, gref = 1L)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -45,7 +55,12 @@ smd(x, g, w, std.error = FALSE)
 \item{w}{a vector of weights (optional)}
 
 \item{std.error}{Logical indicator for computing standard errors using
-\code{\link{compute_smd_var}}}
+\code{\link{compute_smd_var}}.}
+
+\item{na.rm}{remove \code{NA} values from \code{x}? Defaults to \code{FALSE}.}
+
+\item{gref}{an integer indicating which level of \code{g} to use as the reference
+group. Defaults to \code{1}.}
 }
 \value{
 the standardized mean differences between levels of \code{g}
