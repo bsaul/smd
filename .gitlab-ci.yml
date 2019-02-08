@@ -5,6 +5,12 @@ stages:
   - package
 #  - coverage
 
+before_script:
+  # Convert the incoming branch/tag reference to a DNS compliant name
+  #   (eg. "ABCD-1234/branch.topic" becomes "ABCD-1234-branch_topic")
+  - export SAFE_REF_NAME=$(echo $CI_COMMIT_REF_NAME | sed -e 's:/:-:g' -e 's:\.:_:g')
+  - Rscript -e "print(getOption('repos'))"
+
 testing:
   stage: testing
   script:
@@ -21,10 +27,23 @@ testing:
 #  script:
 #    - R -e 'covr::package_coverage(type = c("tests", "examples"))'
 
-# For master builds, push the package to http://cran.novisci.com
-#   Note: The script below does not download the dependencies of the
-#     package to the repository.
-#
+
+  #- Rscript -e "library(desc); d <- as.data.frame(desc_get_deps()); print(d); pkgs <- subset(d, type %in% c('Imports'), select = c('package'))[,1]; print(pkgs); install.packages(pkgs);"
+
+# Store an artifact in gitlab that is the result of R CMD build
+#   Keep it for a week by default. Any longer requires manual intervention
+#   through the UI or API.
+package:
+  stage: package
+  script:
+    - rm -rf .git
+    - R CMD build .
+  artifacts:
+    name: "${CI_PROJECT_NAME}-${SAFE_REF_NAME}"
+    paths:
+      - ./${CI_PROJECT_NAME}_*
+    expire_in: 1 week
+
 minicran:
   stage: package
   only:
