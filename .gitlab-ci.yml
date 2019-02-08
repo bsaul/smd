@@ -2,12 +2,13 @@ image: rocker/verse
 
 stages:
   - testing
+  - package
 #  - coverage
 
 testing:
   stage: testing
   script:
-    - R -e 'install.packages(c("fastmatch", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
+    - R -e 'install.packages(c("fastmatch", "miniCRAN", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
 # args = c("--no-vignettes", "--no-build-vignettes"),build_args = c("--no-build-vignettes", "--compact-vignettes=no"))'
     - R -e 'devtools::check(manual = FALSE)'
 
@@ -19,3 +20,15 @@ testing:
 #    - testing
 #  script:
 #    - R -e 'covr::package_coverage(type = c("tests", "examples"))'
+
+# For master builds, push the package to http://cran.novisci.com
+#   Note: The script below does not download the dependencies of the
+#     package to the repository.
+#
+minicran:
+  stage: package
+  only:
+    - master
+  script:
+    - Rscript -e "library(miniCRAN); addLocalPackage('${CI_PROJECT_NAME}', pkgPath='..', path='/mnt/cran.novisci.com', type='source', build=TRUE)"
+
