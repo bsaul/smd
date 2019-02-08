@@ -36,6 +36,7 @@ testing:
 package:
   stage: package
   script:
+    - R -e 'install.packages(c("fastmatch", "miniCRAN", "MASS", "testthat", "stddiff", "tableone", "knitr", "covr"))'
     - rm -rf .git
     - R CMD build .
   artifacts:
@@ -49,5 +50,6 @@ minicran:
   only:
     - master
   script:
+    - R -e 'install.packages(c("miniCRAN"))'
     - Rscript -e "library(miniCRAN); addLocalPackage('${CI_PROJECT_NAME}', pkgPath='..', path='/mnt/cran.novisci.com', type='source', build=TRUE)"
 
