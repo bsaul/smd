@@ -2,6 +2,7 @@ image: rocker/verse
 
 stages:
   - testing
+  - package
 #  - coverage
 
 testing:
