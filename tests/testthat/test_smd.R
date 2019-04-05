@@ -219,3 +219,13 @@ for(i in c(1,3:length(dg))){
   })
 
 }
+
+
+test_that("smd() when factor has one level", {
+  # https://gitlab.novisci.com/nsStat/SugarMaryDenver/issues/8
+
+  x <- factor(rep("No", 10))
+  g <- factor(rep(c("Control", "Treat"), 5))
+  w <- rep(c(3.12, 1.47), 5)
+  smd(x, g, w)
+})
