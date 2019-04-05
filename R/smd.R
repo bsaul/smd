@@ -225,7 +225,7 @@ compute_smd_pairwise <- function(smd_parts){
 compute_smd <- function(D, S){
   out <- sqrt(t(D) %*% (MASS::ginv(S) %*% D))
   if(length(D) == 1){
-    out <- out * sign(D)
+    out <- drop(out) * sign(D)
   }
   out
 }
