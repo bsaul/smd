@@ -73,7 +73,7 @@ setMethod(
     list(
       n    = n,
       mean = mean,
-      var  = if(n == 0) 0 else sum((xw - mean)^2)/n
+      var  = if(n == 0) 0 else sum(w*(x - mean)^2)/n
     )
 })
 
