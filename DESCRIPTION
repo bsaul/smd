@@ -1,8 +1,9 @@
 Package: SugarMaryDenver
 Type: Package
 Title: Compute Standardized Mean Difference (SMD)
-Version: 0.5.6
-Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), email = "bsaul@novisci.com"))
+Version: 0.5.7
+Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), email = "bsaul@novisci.com"),
+                     person("Alex", "Breskin", role = c("ctb"), email = "abreskin@novisci.com"))
 Maintainer: Bradley Saul <bsaul@novisci.com>
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
