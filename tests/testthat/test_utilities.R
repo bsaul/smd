@@ -1,4 +1,4 @@
-context("Testing utilities")
+# context("Testing utilities")
 
 # Check for two levels
 x1 <- c(1, 2) # Should return warning

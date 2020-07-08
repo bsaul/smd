@@ -1,50 +1,5 @@
 context("Testing the smd() functions")
 
-# TODO: tests to add
-# handling of unsorted grouping variable (done)
-# handling of unsorted factor (and character) levels (done)
-# standard error computations are correct
-# once implemented add checks for changing reference group
-
-
-## Comparing to other packages ####
-
-compare_packages <- function(data){
-
-  smdval <- abs(smd(x = data$x, g = data$g)$estimate)
-  # compare to TableOne package
-  # NOTE: for boolean variables in small datasets, tableone and smd will have
-  # small differences due the way the variance is computed.
-  expect_equal(
-    smdval,
-    tableone::ExtractSmd(tableone::CreateTableOne("x", "g", data)),
-    tolerance = 0.01,
-    check.attributes = FALSE
-  )
-  # compare stddiff package
-  expect_equal(
-    round(smdval, 3), #Not sure why stddiff rounds, but it does
-    stddiff::stddiff.numeric(data,"g","x")[7],
-    tolerance = 0.01)
-}
-
-set.seed(123)
-dg <- list(
-  list(type = "numeric",
-       x    = rnorm(60)),
-  list(type = "integer",
-       x    = rep(rep(1L:3L, each = 10), times = 2)),
-  list(type = "factor",
-       x    = factor(rep(rep(c("x", "y", "z"), each = 10), times = 2))),
-  list(type = "factor_unsorted",
-       x    = factor(rep(rep(c("x", "y", "z"), times = 10), times = 2))),
-  list(type = "character",
-       x    = rep(rep(c("x", "y", "z"), each = 10), times = 2)),
-  list(type = "boolean",
-       x    = as.logical(sample(rbinom(60, size = 1, prob = .5))))
-)
-
-
 for(i in seq_along(dg)){
 
   test_that(sprintf("smd() matches other packages for %s values", dg[[i]]$type), {
@@ -57,8 +12,6 @@ for(i in seq_along(dg)){
 
 }
 
-
-##
 test_that("smd() returns correct values in specific cases", {
   x <- rep(0, 10)
   g <- rep(c("A", "B"), each = 5)
@@ -167,10 +120,9 @@ test_that("smd() runs if g is an unsorted grouping variable", {
 })
 
 
-create_g <- sample(0:1, 20, replace = TRUE)
-create_g_factor <- factor(create_g, labels = c("high", "low"))
-
 test_that("smd() runs if g is unsorted factor (and character) levels", {
+  create_g <- sample(0:1, 20, replace = TRUE)
+  create_g_factor <- factor(create_g, labels = c("high", "low"))
   x <- rnorm(20)
   g <- create_g_factor
   expect_is(smd(x = x, g = g), "data.frame")
@@ -205,8 +157,6 @@ test_that("smd() works when changing gref (reference group)", {
 for(i in c(1,3:length(dg))){
   # Skipping the integer check: this gives a check_for_two_levels warning()
   # TODO: how to do I want to handle this case?
-
-
   test_that(sprintf("smd() runs for various data type %s", dg[[i]]$type), {
     dt <- data.frame(
       g = rep(c("A", "B", "C"), each = 20),
@@ -220,12 +170,9 @@ for(i in c(1,3:length(dg))){
 
 }
 
-
-test_that("smd() when factor has one level", {
-  # https://gitlab.novisci.com/nsStat/SugarMaryDenver/issues/8
-
+test_that("smd() when factor has one level returns 0", {
   x <- factor(rep("No", 10))
   g <- factor(rep(c("Control", "Treat"), 5))
   w <- rep(c(3.12, 1.47), 5)
-  smd(x, g, w)
+  expect_equal(smd(x, g, w)$estimate, 0)
 })
