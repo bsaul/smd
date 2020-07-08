@@ -4,14 +4,6 @@ expect_list <- function(x){
   expect_is(n_mean_var(x), "list")
 }
 
-## TODO: tests to add
-# unsorted factors (done)
-# missing x (done)
-# length(0) x (done)
-# length(1) x (done)
-# factor with only one level (done)
-# character with > 50 unique values (seriously?, but done)
-
 test_that("n_mean_var works for numeric values", {
   expect_list(rnorm(10))
 })
@@ -22,7 +14,6 @@ test_that("n_mean_var works for integer values", {
 
 test_that("n_mean_var works for logical values", {
   expect_list(c(TRUE, FALSE, TRUE, FALSE))
-
 
   res <- n_mean_var(x = c(TRUE, TRUE, FALSE, FALSE), w = c(0, 1, 1, 0))
   expect_equal(res$n, 2)
@@ -87,12 +78,10 @@ test_that("n_mean_var returns correct values with/without weights", {
   expect_equal(res$mean, rep(0, 4), check.attributes = FALSE)
 })
 
-char_generator <- function(n){
-  paste0(sample(letters, n, replace = TRUE), sample(999, n))
-}
 
-x <- char_generator(51)
+
 test_that("n_mean_var works for >50 unique values", {
+  x <- char_generator(51)
   expect_warning(n_mean_var(x), "more than 50 levels")
 })
 
@@ -100,7 +89,9 @@ test_that("n_mean_var works for >50 unique values", {
 
 test_that("n_mean_var runs with NA values", {
   expect_is(
-    n_mean_var(x = c(TRUE, TRUE, FALSE, NA), w = c(0, 1, 1, 0), na.rm = TRUE),
+    n_mean_var(x = c(TRUE, TRUE, FALSE, NA),
+               w = c(0, 1, 1, 0),
+               na.rm = TRUE),
     "list")
 })
 

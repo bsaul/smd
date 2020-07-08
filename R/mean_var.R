@@ -23,6 +23,7 @@ multinom_var <- function(p){
 #' @param na.rm passed to \code{var} and \code{sum}
 #' @importFrom stats var
 #' @return a list containing \code{mean} and \code{var}
+#' @keywords internal
 
 setGeneric("n_mean_var", def = function(x, w = NULL, na.rm = FALSE){
   standardGeneric("n_mean_var")

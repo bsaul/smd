@@ -1,4 +1,4 @@
 library(testthat)
-library(SugarMaryDenver)
+library(smd)
 
-test_check("SugarMaryDenver")
+test_check("smd")

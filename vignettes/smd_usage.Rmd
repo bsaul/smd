@@ -66,7 +66,7 @@ Standard errors are computed using the formula described in @hedges1985:
 
 
 ```{r}
-library(SugarMaryDenver)
+library(smd)
 ```
 
 ```{r numeric}
