@@ -1,7 +1,7 @@
 Package: smd
 Type: Package
 Title: Compute Standardized Mean Difference (SMD)
-Version: 0.6.0
+Version: 0.6.1
 Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), email = "bsaul@novisci.com"),
                      person("Alex", "Breskin", role = c("ctb"), email = "abreskin@novisci.com"))
 Maintainer: Bradley Saul <bsaul@novisci.com>
@@ -17,7 +17,8 @@ Suggests:
   stddiff,
   tableone,
   knitr,
-  dplyr
+  dplyr,
+  purrr
 License: GPL-3 + file LICENSE
 URL: https://gitlab.novisci.com/nsStat/smd
 BugReports: https://gitlab.novisci.com/nsstat/smd/issues

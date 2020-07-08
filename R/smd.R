@@ -115,7 +115,9 @@ setMethod(
     }
 
     apply(x, 2, function(j) {
-      simplify2array(smd(x = j, w = w, g = g, std.error = std.error, na.rm = na.rm, gref = gref)$estimate)
+      simplify2array(smd(x = j, w = w, g = g,
+                         std.error = std.error,
+                         na.rm = na.rm, gref = gref)$estimate)
     })
   }
 )
