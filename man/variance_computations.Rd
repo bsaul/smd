@@ -16,3 +16,4 @@ a covariance matrix
 \description{
 Variance computations
 }
+\keyword{internal}

@@ -1,6 +1,7 @@
 #' Checks whether a vector has more than two unique values
 #'
 #' @param x a vector
+#' @keywords internal
 
 check_for_two_levels <- function(x){
   xunique <- sort(unique(x))
@@ -17,7 +18,7 @@ check_for_two_levels <- function(x){
 #' @param x a list
 #' @param f the function to apply
 #' @param ref the index of the reference element
-#'
+#' @keywords internal
 
 lapplyFUNpairwise <- function(x, f, ref){
   if(sum(is.na(x)) >= 1) stop("x contians NA value")

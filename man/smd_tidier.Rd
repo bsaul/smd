@@ -19,3 +19,4 @@ a \code{data.frame}
 \description{
 Helper to clean up smd output
 }
+\keyword{internal}

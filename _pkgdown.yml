@@ -1,0 +1,8 @@
+destination: docs
+template:
+  params:
+    bootswatch: cerulean
+reference:
+  - title: "smd function"
+    contents:
+      - starts_with("smd")
