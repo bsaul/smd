@@ -7,7 +7,7 @@ stages:
 testing:
   stage: testing
   script:
-    - R -e 'install.packages(c("fastmatch", "stddiff", "tableone"))'
+#    - R -e 'install.packages(c("fastmatch", "stddiff", "tableone"))'
     - R -e 'devtools::check(manual = FALSE)'
 
 package:
@@ -15,6 +15,14 @@ package:
   script:
     - rm -rf .git
     - R CMD build .
+
+site:
+  stage: package
+  only:
+     - master
+  script:
+     - R -e 'pkgdown::build_site()'
+     - aws s3 sync $CI_PROJECT_DIR/docs/ s3://docs.novisci.com/smd/ --delete --acl public-read
 
 minicran:
   stage: package
