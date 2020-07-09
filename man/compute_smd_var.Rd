@@ -21,3 +21,4 @@ Hedges and Olkin (1985):
 \sqrt{\frac{n_1 + n_2}{n_1n_2} + \frac{d^2}{2(n_1 + n_2)}}
 }
 }
+\keyword{internal}

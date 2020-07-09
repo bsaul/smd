@@ -23,3 +23,4 @@ compute_smd_parts(.x, .g, .w, .na, .ref, applyFUN = n_mean_var)
 \description{
 Computes \code{D} and \code{S} for use within \link{compute_smd}.
 }
+\keyword{internal}

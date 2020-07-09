@@ -1,19 +1,47 @@
 #' Compute Standardized Mean Difference
 #'
+#' @description
 #' Computes the standardized mean differnce (SMD) between two groups.
 #'
+#' \deqn{
+#'  d = \sqrt{D' S^{-1} D}
+#' }
+#'
+#' where \eqn{D} is a vector of differences between group 1 and 2 and \eqn{S} is the
+#' covariance matrix of these differences. If \eqn{D} is length 1, the result is
+#' multplied by \eqn{sign(D)}.
+#'
+#' In the case of a \code{numeric} or \code{integer} variable, this is equivalent to:
+#'
+#' \deqn{
+#'   d = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{(s^2_1 + s^2_2)/2}}
+#' }
+#' where \eqn{\bar{x}_g} is the sample mean for group \eqn{g} and \eqn{s^2_g} is the sample variance.
+#'
+#' For a \code{logical} or \code{factor} with only two levels, the equation above is
+#' \eqn{\bar{x}_g = \hat{p}_g}, i.e. the sample proportion and \eqn{s^2_g = \hat{p}_g(1 - \hat{p}_g)}
+#' (NOTE: interally \code{smd} uses the \code{\link[stats]{var}} function, which uses \eqn{n-1} as the
+#' denominator. Hence, in small samples, \eqn{s^2_g} will not be precisely
+#' \eqn{\hat{p}_g(1 - \hat{p}_g)})
+#'
 #' @name smd
-#' @param x a vector of values
-#' @param w a vector of weights (optional)
-#' @param g a vector of groupings to compare
+#' @param x a \code{vector} or \code{matrix} of values
+#' @param g a vector of at least 2 groups to compare. This should coercable to a
+#'    \code{factor}.
+#' @param w a vector of \code{numeric} weights (optional)
 #' @param std.error Logical indicator for computing standard errors using
-#' \code{\link{compute_smd_var}}.
-#' @param na.rm remove \code{NA} values from \code{x}? Defaults to \code{FALSE}.
+#'    \code{\link{compute_smd_var}}. Defaults to \code{FALSE}.
+#' @param na.rm Remove \code{NA} values from \code{x}? Defaults to \code{FALSE}.
 #' @param gref an integer indicating which level of \code{g} to use as the reference
-#' group. Defaults to \code{1}.
-#' @return the standardized mean differences between levels of \code{g}
-#' for values of \code{x}
-#' @seealso \code{\link{compute_smd}} for mathematical details
+#'     group. Defaults to \code{1}.
+#' @return a \code{data.frame} containing standardized mean differences between
+#'    levels of \code{g} for values of \code{x}. The \code{data.frame} contains
+#'    the columns:
+#'    \itemize{
+#'      \item \code{term}: the level being comparing to the reference level
+#'      \item \code{estimate}: SMD estimates
+#'      \item \code{std.error}: (if \code{std.error = TRUE}) SMD standard error estimates
+#'    }
 #' @export
 #' @examples
 #' x <- rnorm(100)
@@ -216,6 +244,7 @@ setMethod(
 #' @references Yang, D., & Dalton, J. E. (2012, April). A unified approach to measuring
 #' the effect size between two groups using SAS®. In SAS Global Forum (Vol. 335, pp. 1-6)
 #' @seealso \code{\link{smd}}
+#' @keywords internal
 
 compute_smd_pairwise <- function(smd_parts){
   d <- simplify2array(lapply(smd_parts, function(x) compute_smd(x$D, x$S)))
@@ -243,7 +272,7 @@ compute_smd <- function(D, S){
 #'
 #' @param d an SMD value
 #' @inheritParams compute_smd
-#'
+#' @keywords internal
 
 compute_smd_var <- function(d, smd_parts){
   warning("smd variance computations have not been rigorously tested.")
@@ -263,6 +292,7 @@ compute_smd_var <- function(d, smd_parts){
 #' @param .ref integer position of the reference group
 #' @param applyFUN the \code{FUN} used to compute the SMD parts. Defaults to
 #' \code{\link{n_mean_var}}
+#' @keywords internal
 
 compute_smd_parts <- function(.x, .g, .w, .na, .ref,
                               applyFUN = n_mean_var){
@@ -309,6 +339,7 @@ compute_smd_parts <- function(.x, .g, .w, .na, .ref,
 #' @name smd_tidier
 #' @param smd_res a result of \link{smd}
 #' @return a \code{data.frame}
+#' @keywords internal
 
 tidy_smd_singlevar <- function(smd_res){
   data.frame(smd_res, stringsAsFactors = FALSE)

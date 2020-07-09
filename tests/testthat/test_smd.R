@@ -2,6 +2,7 @@ context("Testing the smd() functions")
 
 for(i in seq_along(dg)){
 
+  skip_on_ci()
   test_that(sprintf("smd() matches other packages for %s values", dg[[i]]$type), {
     dt <- data.frame(
         g = rep(c("A", "B"), each = 30),

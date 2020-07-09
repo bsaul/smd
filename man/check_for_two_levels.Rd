@@ -12,3 +12,4 @@ check_for_two_levels(x)
 \description{
 Checks whether a vector has more than two unique values
 }
+\keyword{internal}

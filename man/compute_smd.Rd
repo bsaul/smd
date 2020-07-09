@@ -54,3 +54,4 @@ the effect size between two groups using SAS®. In SAS Global Forum (Vol. 335, p
 \seealso{
 \code{\link{smd}}
 }
+\keyword{internal}

@@ -1,12 +1,14 @@
 #' Variance computations
 #'
 #' @name variance_computations
+#' @keywords internal
 
 NULL
 
 #' @rdname variance_computations
 #' @param p a vector of proportions corresponding to the proportion in each group
 #' @return a covariance matrix
+#' @keywords internal
 
 multinom_var <- function(p){
   diag(p) - outer(p, p)

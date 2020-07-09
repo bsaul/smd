@@ -17,3 +17,4 @@ lapplyFUNpairwise(x, f, ref)
 Applies a function \code{f(ref, y)} where \code{y} is an element of a list and
  \code{ref} is a reference element.
 }
+\keyword{internal}
