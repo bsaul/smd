@@ -3,3 +3,4 @@
 ^\.gitlab-ci\.yml$
 ^_pkgdown\.yml$
 ^docs.*$
+^LICENSE\.md$

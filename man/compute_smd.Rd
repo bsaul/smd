@@ -30,22 +30,24 @@ Computes:
  d = \sqrt{D' S^{-1} D}
 }
 
-where \eqn{D} is a vector of differences between group 1 and 2 and \eqn{S} is the
-covariance matrix of these differences. If \eqn{D} is length 1, the result is
-multplied by \eqn{sign(D)}.
+where \eqn{D} is a vector of differences between group 1 and 2 and \eqn{S} is
+the covariance matrix of these differences. If \eqn{D} is length 1, the result
+is multplied by \eqn{sign(D)}.
 
-In the case of a \code{numeric} or \code{integer} variable, this is equivalent to:
+In the case of a \code{numeric} or \code{integer} variable, this is equivalent
+ to:
 
 \deqn{
   d = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{(s^2_1 + s^2_2)/2}}
 }
-where \eqn{\bar{x}_g} is the sample mean for group \eqn{g} and \eqn{s^2_g} is the sample variance.
+where \eqn{\bar{x}_g} is the sample mean for group \eqn{g} and \eqn{s^2_g}
+is the sample variance.
 
 For a \code{logical} or \code{factor} with only two levels, the equation above is
 \eqn{\bar{x}_g = \hat{p}_g}, i.e. the sample proportion and \eqn{s^2_g = \hat{p}_g(1 - \hat{p}_g)}
-(NOTE: interally \code{smd} uses the \code{\link[stats]{var}} function, which uses \eqn{n-1} as the
-denominator. Hence, in small samples, \eqn{s^2_g} will not be precisely
-\eqn{\hat{p}_g(1 - \hat{p}_g)})
+(NOTE: interally \code{smd} uses the \code{\link[stats]{var}} function, which
+uses \eqn{n-1} as the denominator. Hence, in small samples, \eqn{s^2_g} will
+not be precisely \eqn{\hat{p}_g(1 - \hat{p}_g)}).
 }
 \references{
 Yang, D., & Dalton, J. E. (2012, April). A unified approach to measuring

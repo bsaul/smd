@@ -2,14 +2,12 @@
 #'
 #' @name variance_computations
 #' @keywords internal
-
 NULL
 
 #' @rdname variance_computations
 #' @param p a vector of proportions corresponding to the proportion in each group
 #' @return a covariance matrix
 #' @keywords internal
-
 multinom_var <- function(p){
   diag(p) - outer(p, p)
 }
@@ -22,18 +20,16 @@ multinom_var <- function(p){
 #' @name n_mean_var
 #' @param x a vector of values
 #' @param w an optional vector of \code{numeric} weights
-#' @param na.rm passed to \code{var} and \code{sum}
+#' @param na.rm passed to \code{sum}
 #' @importFrom stats var
 #' @return a list containing \code{mean} and \code{var}
 #' @keywords internal
-
 setGeneric("n_mean_var", def = function(x, w = NULL, na.rm = FALSE){
   standardGeneric("n_mean_var")
 
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("numeric", "missing"),
@@ -53,6 +49,7 @@ setMethod(
     )
 } )
 
+#' @rdname n_mean_var
 setMethod(
   f          = "n_mean_var",
   signature  = c("numeric", "numeric"),
@@ -82,7 +79,6 @@ setMethod(
 
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("integer", "missing"),
@@ -93,7 +89,6 @@ setMethod(
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("integer", "numeric"),
@@ -104,7 +99,6 @@ setMethod(
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("logical", "missing"),
@@ -113,7 +107,6 @@ setMethod(
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("logical", "numeric"),
@@ -122,7 +115,6 @@ setMethod(
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("factor", "missing"),
@@ -137,7 +129,6 @@ setMethod(
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("factor", "numeric"),
@@ -155,7 +146,6 @@ setMethod(
   })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("character", "missing"),
@@ -175,7 +165,6 @@ setMethod(
 })
 
 #' @rdname n_mean_var
-
 setMethod(
   f          = "n_mean_var",
   signature  = c("character", "numeric"),
