@@ -53,7 +53,7 @@ The `smd` function computes the standardized mean difference for each level $k$ 
 d_k = \sqrt{(\bar{x}_r - \bar{x}_{k})^{\intercal}S_{rk}^{-1}(\bar{x}_r - \bar{x}_{k})}
 \]
 
-where $\bar{x}_{\cdot}$ and $S_{rk}$ are the sample mean and covariances for reference group $r$ and group $k$, respectively. In the case that $x$ is categorical, $\bar{x}$ is the vector of proportions of each category level within a group, and $S_{rk}$ is the multinomical covariance matrix.
+where $\bar{x}_{\cdot}$ and $S_{rk}$ are the sample mean and covariances for reference group $r$ and group $k$, respectively. In the case that $x$ is categorical, $\bar{x}$ is the vector of proportions of each category level within a group, and $S_{rk}$ is the multinomial covariance matrix.
 
 Standard errors are computed using the formula described in @hedges1985:
 

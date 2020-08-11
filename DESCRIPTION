@@ -1,9 +1,15 @@
 Package: smd
 Type: Package
 Title: Compute Standardized Mean Difference (SMD)
-Version: 0.6.1
-Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), email = "bsaul@novisci.com"),
-                     person("Alex", "Breskin", role = c("ctb"), email = "abreskin@novisci.com"))
+Version: 0.6.2
+Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), 
+                            email = "bsaul@novisci.com"),
+                     person("Alex", "Breskin", role = c("ctb"), 
+                            email = "abreskin@novisci.com"),
+                     person("Catie", "Wiener", role = c("ctb"), 
+                            email = "cwiener@novisci.com"),
+                     person("Matt", "Phelan", role = c("ctb"), 
+                            email = "mphelan@novisci.com"))
 Maintainer: Bradley Saul <bsaul@novisci.com>
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
@@ -19,11 +25,11 @@ Suggests:
   knitr,
   dplyr,
   purrr
-License: GPL-3 + file LICENSE
-URL: https://gitlab.novisci.com/nsStat/smd
+License: MIT + file LICENSE
+URL: https://docs.novisci.com/smd/
 BugReports: https://gitlab.novisci.com/nsstat/smd/issues
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Repository: cran.novisci.com

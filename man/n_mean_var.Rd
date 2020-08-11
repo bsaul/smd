@@ -3,6 +3,7 @@
 \name{n_mean_var}
 \alias{n_mean_var}
 \alias{n_mean_var,numeric,missing-method}
+\alias{n_mean_var,numeric,numeric-method}
 \alias{n_mean_var,integer,missing-method}
 \alias{n_mean_var,integer,numeric-method}
 \alias{n_mean_var,logical,missing-method}
@@ -16,6 +17,8 @@
 n_mean_var(x, w = NULL, na.rm = FALSE)
 
 \S4method{n_mean_var}{numeric,missing}(x, w = NULL, na.rm = FALSE)
+
+\S4method{n_mean_var}{numeric,numeric}(x, w = NULL, na.rm = FALSE)
 
 \S4method{n_mean_var}{integer,missing}(x, w = NULL, na.rm = FALSE)
 
@@ -38,7 +41,7 @@ n_mean_var(x, w = NULL, na.rm = FALSE)
 
 \item{w}{an optional vector of \code{numeric} weights}
 
-\item{na.rm}{passed to \code{var} and \code{sum}}
+\item{na.rm}{passed to \code{sum}}
 }
 \value{
 a list containing \code{mean} and \code{var}
