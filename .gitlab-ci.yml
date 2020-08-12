@@ -17,7 +17,7 @@ cran:
   image: rocker/r-devel:latest
   stage: cran
   script:
-    - R CMD check --as-cran
+    - R CMD check . --as-cran
 
 package:
   stage: package
