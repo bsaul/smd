@@ -17,7 +17,7 @@ cran_check:
   image: registry.novisci.com/nsstat/statocker/r/develcran
   stage: cran_check
   script:
-#    - R -e "install.packages(c('testthat', 'stddiff', 'tableone', 'knitr', 'dplyr', 'purrr', 'markdown'))"
+    - R -e "install.packages(c('stddiff', 'tableone'))"
     - R CMD check . --as-cran
 
 package:
