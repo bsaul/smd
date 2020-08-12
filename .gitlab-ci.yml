@@ -7,7 +7,7 @@ stages:
 testing:
   stage: testing
   script:
-#    - R -e 'install.packages(c("fastmatch", "stddiff", "tableone"))'
+#    - R -e 'install.packages(c("stddiff", "tableone"))'
     - R -e 'devtools::check(manual = FALSE)'
 
 package:

@@ -18,7 +18,6 @@ Imports:
   MASS (>= 7.3-50),
   methods (>= 3.5.1)
 Suggests:
-  fastmatch,
   testthat,
   stddiff,
   tableone,
