@@ -2,7 +2,7 @@ image: registry.novisci.com/nsstat/statocker/r/pkgdev:3.6.2
 
 stages:
   - testing
-  - cran
+  - cran_check
   - package
 
 testing:
@@ -10,14 +10,14 @@ testing:
   script:
     - R -e 'devtools::check(manual = FALSE)'
 
-cran:
+cran_check:
 # Per CRAN Repository Policy:
 # I have checked the submission using R CMD check --as-cran and a current version
 # of r-devel
-  image: rocker/r-devel:latest
-  stage: cran
+  image: registry.novisci.com/nsstat/statocker/r/develcran
+  stage: cran_check
   script:
-    - R -e "install.packages(c('testthat', 'stddiff', 'tableone', 'knitr', 'dplyr', 'purrr', 'markdown'))"
+#    - R -e "install.packages(c('testthat', 'stddiff', 'tableone', 'knitr', 'dplyr', 'purrr', 'markdown'))"
     - R CMD check . --as-cran
 
 package:
