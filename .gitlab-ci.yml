@@ -17,8 +17,7 @@ cran:
   image: rocker/r-devel:latest
   stage: cran
   script:
-    - R -e "install.packages(c('testthat', 'stddiff', 'tableone', 'knitr', 'dplyr', 'purrr',
-  'markdown')"
+    - R -e "install.packages(c('testthat', 'stddiff', 'tableone', 'knitr', 'dplyr', 'purrr', 'markdown')"
     - R CMD check . --as-cran
 
 package:
