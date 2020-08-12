@@ -12,6 +12,15 @@ compare_packages <- function(data){
     tolerance = 0.01,
     check.attributes = FALSE
   )
+
+  skip_if(
+    is.character(data$x),
+    "On R 4.0 (it seems), stddiff() results in error when x is character"
+    # stddiff::stddiff.numeric(data, "g", "x")
+    # stats:::aggregate.default(temp[, 2], by = list(temp[, 1]), FUN = mean)
+    # stats::aggregate.data.frame(as.data.frame(x), ...)
+  )
+
   # compare stddiff package
   expect_equal(
     round(smdval, 3), #Not sure why stddiff rounds, but it does
