@@ -2,12 +2,22 @@ image: registry.novisci.com/nsstat/statocker/r/pkgdev:3.6.2
 
 stages:
   - testing
+  - cran
   - package
 
 testing:
   stage: testing
   script:
     - R -e 'devtools::check(manual = FALSE)'
+
+cran:
+# Per CRAN Repository Policy:
+# I have checked the submission using R CMD check --as-cran and a current version
+# of r-devel
+  image: rocker/r-devel:latest
+  stage: cran
+  script:
+    - R CMD check --as-cran
 
 package:
   stage: package
