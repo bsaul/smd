@@ -1,5 +1,8 @@
 image: registry.novisci.com/nsstat/statocker/r/pkgdev:3.6.2
 
+variables:
+   RPKG: smd
+
 stages:
   - testing
   - cran_check
@@ -18,7 +21,9 @@ cran_check:
   stage: cran_check
   script:
     - R -e "install.packages(c('stddiff', 'tableone'))"
-    - R CMD check . --as-cran
+    - R CMD build .
+    - VERS=$(grep "Version:" DESCRIPTION | sed -e 's/Version: //')
+    - R CMD check ${RPKG}_${VERS}.tar.gz --as-cran
 
 package:
   stage: package
@@ -32,12 +37,12 @@ site:
      - master
   script:
      - R -e 'pkgdown::build_site()'
-     - aws s3 sync $CI_PROJECT_DIR/docs/ s3://docs.novisci.com/smd/ --delete --acl public-read
+     - aws s3 sync $CI_PROJECT_DIR/docs/ s3://docs.novisci.com/$RPKG/ --delete --acl public-read
 
 minicran:
   stage: package
   only:
     - master
   script:
-    - Rscript -e "library(miniCRAN); addLocalPackage('${CI_PROJECT_NAME}', pkgPath='..', path='/mnt/cran.novisci.com', type='source', build=TRUE)"
-    - Rscript -e "drat::archivePackages(repopath='/mnt/cran.novisci.com', pkg = '${CI_PROJECT_NAME}')"
+    - Rscript -e "library(miniCRAN); addLocalPackage('${RPKG}', pkgPath='..', path='/mnt/cran.novisci.com', type='source', build=TRUE)"
+    - Rscript -e "drat::archivePackages(repopath='/mnt/cran.novisci.com', pkg = '${RPKG}')"
