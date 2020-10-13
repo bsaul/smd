@@ -23,7 +23,7 @@ cran_check:
     - R -e "install.packages(c('stddiff', 'tableone'))"
     - R CMD build .
     - "VERS=`grep 'Version:' DESCRIPTION | sed -e 's/Version: //'`"
-    - R CMD check $RPKG_$VERS.tar.gz --as-cran
+    - R CMD check ${RPKG}_$VERS.tar.gz --as-cran
 
 package:
   stage: package
