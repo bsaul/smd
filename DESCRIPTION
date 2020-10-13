@@ -1,8 +1,7 @@
 Package: smd
 Type: Package
 Title: Compute Standardized Mean Differences
-Version: 0.6.5
-Author: Bradley Saul <bsaul@novisci.com>
+Version: 0.6.6
 Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), 
                     email = "bsaul@novisci.com"),
              person("Alex", "Breskin", role = c("ctb"), 
@@ -11,7 +10,6 @@ Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"),
                     email = "cwiener@novisci.com"),
              person("Matt", "Phelan", role = c("ctb"), 
                     email = "mphelan@novisci.com"))
-Maintainer: Bradley Saul <bsaul@novisci.com>
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
     <http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf>. 
@@ -25,7 +23,8 @@ Suggests:
   knitr,
   dplyr,
   purrr,
-  markdown
+  markdown,
+  rmarkdown
 License: MIT + file LICENSE
 URL: https://docs.novisci.com/smd/
 BugReports: https://gitlab.novisci.com/nsstat/smd/issues
