@@ -1,15 +1,15 @@
 Package: smd
 Type: Package
 Title: Compute Standardized Mean Differences
-Version: 0.6.4
-Author: Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), 
-                            email = "bsaul@novisci.com"),
-                     person("Alex", "Breskin", role = c("ctb"), 
-                            email = "abreskin@novisci.com"),
-                     person("Catie", "Wiener", role = c("ctb"), 
-                            email = "cwiener@novisci.com"),
-                     person("Matt", "Phelan", role = c("ctb"), 
-                            email = "mphelan@novisci.com"))
+Version: 0.6.5
+Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), 
+                    email = "bsaul@novisci.com"),
+             person("Alex", "Breskin", role = c("ctb"), 
+                    email = "abreskin@novisci.com"),
+             person("Catie", "Wiener", role = c("ctb"), 
+                    email = "cwiener@novisci.com"),
+             person("Matt", "Phelan", role = c("ctb"), 
+                    email = "mphelan@novisci.com"))
 Maintainer: Bradley Saul <bsaul@novisci.com>
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
