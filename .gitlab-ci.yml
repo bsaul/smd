@@ -1,7 +1,7 @@
 image: registry.novisci.com/nsstat/statocker/r/pkgdev:3.6.2
 
 variables:
-   RPKG: smd
+  RPKG: smd
 
 stages:
   - testing
@@ -22,8 +22,8 @@ cran_check:
   script:
     - R -e "install.packages(c('stddiff', 'tableone'))"
     - R CMD build .
-    - VERS=$(grep "Version:" DESCRIPTION | sed -e 's/Version: //')
-    - R CMD check ${RPKG}_${VERS}.tar.gz --as-cran
+    - "VERS=`grep 'Version:' DESCRIPTION | sed -e 's/Version: //'`"
+    - R CMD check $RPKG_$VERS.tar.gz --as-cran
 
 package:
   stage: package
