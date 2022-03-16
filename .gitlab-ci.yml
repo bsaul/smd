@@ -1,4 +1,4 @@
-image: registry.novisci.com/nsstat/statocker/r/pkgdev:3.6.2
+image: registry.novisci.com/nsstat/nsbuild/r:4.1.2
 
 variables:
   RPKG: smd
@@ -21,7 +21,7 @@ cran_check:
   stage: cran_check
   script:
     - R -e "install.packages(c('stddiff', 'tableone'))"
-    - R CMD build .
+    - R CMD build --no-build-vignettes .
     - "VERS=`grep 'Version:' DESCRIPTION | sed -e 's/Version: //'`"
     - R CMD check ${RPKG}_$VERS.tar.gz --as-cran
 
@@ -29,7 +29,7 @@ package:
   stage: package
   script:
     - rm -rf .git
-    - R CMD build .
+    - R CMD build --no-build-vignettes .
 
 site:
   stage: package
