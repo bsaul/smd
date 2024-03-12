@@ -6,3 +6,4 @@
 *.DS_Store
 docs/*
 **.direnv
+**result
