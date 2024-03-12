@@ -9,7 +9,7 @@ Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"),
              person("Catie", "Wiener", role = c("ctb"), 
                     email = "cwiener@live.unc.edu"),
              person("Matt", "Phelan", role = c("ctb"), 
-                    email = "mphelan@novisci.com"))
+                    email = "mpphelan1@gmail.com"))
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
     <http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf>. 
