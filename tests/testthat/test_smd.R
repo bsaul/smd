@@ -78,16 +78,26 @@ test_that("smd() returns correct values in specific cases", {
 test_that("smd() works/does not as appropriate with matrices", {
   X <- matrix(rnorm(100), ncol = 5)
   g <- rep(c("A", "B"), each = 10)
+  w <- rep(c(3.12, 1.47), 5)
   expect_is(smd(x = X, g = g), "numeric")
+  expect_is(smd(x = X, g = g, w = w), "numeric")
 })
 
 test_that("smd() works/does not as appropriate with lists", {
   X <- replicate(rnorm(20), n = 5, simplify = FALSE)
   g <- rep(c("A", "B"), each = 10)
+  w <- rep(c(3.12, 1.47), 5)
+
   expect_is(smd(x = X, g = g), "data.frame")
 
   # checking lists of different types
   expect_is(smd(x = purrr::map(dg, ~ .x$x), g = rep(c("A", "B"), each = 30)), "data.frame")
+  expect_is(
+    smd(x = purrr::map(dg, ~ .x$x),
+        g = rep(c("A", "B"), each = 30),
+        w = rep(c(3.12, 1.47), 30)),
+    "data.frame"
+  )
 })
 
 test_that("smd() works/does not as appropriate with data.frames", {
@@ -193,6 +203,7 @@ test_that("smd() when factor has one level returns 0", {
   expect_equal(smd(x, g, w)$estimate, 0)
 })
 
+
 test_that("smd() works when `std.error=TRUE`", {
   x <- rep(0, 10)
   g <- rep(c("A", "B"), each = 5)
@@ -206,3 +217,35 @@ test_that("smd() works when `std.error=TRUE`", {
   )
 })
 
+test_that("smd() fails when `std.error=TRUE` when x is a matrix", {
+  X <- matrix(rnorm(100), ncol = 5)
+  g <- rep(c("A", "B"), each = 10)
+  w <- rep(c(3.12, 1.47), 5)
+
+  expect_error(
+    smd(X, g, std.error = TRUE),
+    "smd is not set up to compute std.error on a matrix"
+  )
+  expect_error(
+    smd(X, g, w, std.error = TRUE),
+    "smd is not set up to compute std.error on a matrix"
+  )
+})
+
+
+test_that("smd(x, g, w) works when x is character or logical", {
+  x_chr <- rep_len(c("A", "B"), 10)
+  x_lgl <- rep_len(c(TRUE, FALSE), 10)
+  x_fct <- factor(x_chr)
+  g <- rep(c("A", "B"), each = 5)
+  w <- rep(c(3.12, 1.47), 5)
+
+  expect_equal(
+    smd(x_chr, g, w),
+    smd(x_fct, g, w)
+  )
+  expect_equal(
+    smd(x_lgl, g, w),
+    smd(x_fct, g, w)
+  )
+})
