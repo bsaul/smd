@@ -159,6 +159,16 @@ test_that("smd() works when changing gref (reference group)", {
   expect_equal(smd(x, g, gref = 1)$estimate[2], -smd(x, g, gref = 3)$estimate[1])
 })
 
+test_that("smd() does not work with incorrectly specified gref (reference group)", {
+  g <- rep(c("A", "B"), each = 30)
+  x <- rnorm(60)
+  expect_error(
+    smd(x, g, gref = 0L),
+    "gref must be an integer within",
+    fixed = FALSE
+  )
+})
+
 
 for(i in c(1,3:length(dg))){
   # Skipping the integer check: this gives a check_for_two_levels warning()
@@ -182,3 +192,17 @@ test_that("smd() when factor has one level returns 0", {
   w <- rep(c(3.12, 1.47), 5)
   expect_equal(smd(x, g, w)$estimate, 0)
 })
+
+test_that("smd() works when `std.error=TRUE`", {
+  x <- rep(0, 10)
+  g <- rep(c("A", "B"), each = 5)
+  expect_error(
+    smd_std.error <- smd(x, g, std.error = TRUE),
+    NA
+  )
+  expect_equal(
+    names(smd_std.error),
+    c("term", "estimate", "std.error")
+  )
+})
+
