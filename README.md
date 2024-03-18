@@ -14,4 +14,4 @@ g <- rep(1:2, each = 50)
 smd(x, g)
 ```
 
-See [using smd](https://docs.novisci.com/smd/articles/smd_usage.html) for more details.
+See [using smd](https://bsaul.github.io/smd/articles/smd_usage.html) for more details.
