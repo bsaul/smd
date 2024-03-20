@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/smd)](https://CRAN.R-project.org/package=smd)
 [![R-CMD-check](https://github.com/bsaul/smd/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bsaul/smd/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/bsaul/smd/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bsaul/smd?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/bsaul/smd/branch/master/graph/badge.svg)](https://app.codecov.io/gh/bsaul/smd?branch=master)
 <!-- badges: end -->
 
 An `R` package for computing the standardized mean difference between two groups for various data types. 
