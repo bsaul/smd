@@ -84,9 +84,14 @@
 
 <p>An <code>R</code> package for computing the standardized mean difference between two groups for various data types.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bsaul.github.io/smd/" class="external-link">smd</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, each <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/smd.html">smd</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="fu"><a href="reference/smd.html">smd</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, std.error <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   term  estimate std.error</span></span>
+<span><span class="co">#&gt; 1    2 0.1653336 0.2003414</span></span></code></pre></div>
 <p>See <a href="https://bsaul.github.io/smd/articles/smd_usage.html" class="external-link">using smd</a> for more details.</p>
 </div>
   </div>
@@ -131,7 +136,7 @@
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=smd" class="external-link"><img src="https://www.r-pkg.org/badges/version/smd" alt="CRAN status"></a></li>
 <li><a href="https://github.com/bsaul/smd/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/bsaul/smd/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/bsaul/smd?branch=main" class="external-link"><img src="https://codecov.io/gh/bsaul/smd/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://app.codecov.io/gh/bsaul/smd?branch=master" class="external-link"><img src="https://codecov.io/gh/bsaul/smd/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
