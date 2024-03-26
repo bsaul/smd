@@ -5,3 +5,8 @@
 ^docs.*$
 ^LICENSE\.md$
 ^\.github$
+^result$
+^\.direnv$
+^flake\.lock$
+^.*\.nix$
+^\.envrc$
