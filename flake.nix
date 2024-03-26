@@ -16,22 +16,59 @@
   outputs = { self, nixpkgs, flake-utils, gitignore }:
     flake-utils.lib.eachDefaultSystem (system: let
       
+      package = "smd";
+      version = "0.6.7";
+
       pkgs = nixpkgs.legacyPackages.${system};
+
       inherit (gitignore.lib) gitignoreSource;
 
-      smdDeps = with pkgs.rPackages; [
+      smdImports = with pkgs.rPackages; [
             MASS
           ];
-  
+
+      smdSuggests = with pkgs.rPackages; [ 
+          testthat 
+          stddiff
+          tableone
+          knitr
+          dplyr
+          purrr
+          markdown
+          rmarkdown
+        ];
+
     in {
 
-      packages.smd = pkgs.rPackages.buildRPackage {
+      packages.${package} = pkgs.rPackages.buildRPackage {
           name = "smd";
           src = gitignoreSource ./.;
-          propagatedBuildInputs = smdDeps;
+          propagatedBuildInputs = smdImports;
         };
       
-      packages.default = self.packages.${system}.smd;
+      # Find a better way to build this derivation
+      # sudo nix build --option sandbox 'relaxed' .#cran 
+      packages.cran = pkgs.stdenv.mkDerivation {
+          __noChroot = true;
+          name = "cran";
+          version = version;
+          src = gitignoreSource ./.;
+          buildInputs = [ 
+              pkgs.R 
+              pkgs.pandoc 
+              pkgs.texlive.combined.scheme-full
+            ] ++ smdSuggests ++ smdImports ;
+          buildPhase = ''
+            ${pkgs.R}/bin/R CMD build .  && \
+              ${pkgs.R}/bin/R CMD check $(ls -t . | head -n1) --as-cran
+          '';
+          installPhase  = ''
+            mkdir -p $out
+            cp ${package}_${version}.tar.gz $out
+          '';
+      };
+      
+      packages.default = self.packages.${system}.${package};
 
       devShells.default =  pkgs.mkShell {
         nativeBuildInputs = [ pkgs.bashInteractive ];
@@ -39,7 +76,7 @@
           pkgs.R
           pkgs.rPackages.devtools
           pkgs.rPackages.usethis
-        ] ++ smdDeps ;
+        ] ++ smdImports ++ smdSuggests ;
       }; 
 
     });
