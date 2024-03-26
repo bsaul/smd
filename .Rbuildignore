@@ -7,3 +7,6 @@
 ^\.github$
 ^result$
 ^\.direnv$
+^flake\.lock$
+^.*\.nix$
+^\.envrc$
