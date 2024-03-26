@@ -49,7 +49,9 @@
       # Find a better way to build this derivation
       # sudo nix build --option sandbox 'relaxed' .#cran 
       packages.cran = pkgs.stdenv.mkDerivation {
-          __noChroot = true;
+          __noChroot = true; # WANT REMOVE THIS but 
+                             # R CMD check requires internet access
+                             # What's a better way?
           name = "cran";
           version = version;
           src = gitignoreSource ./.;
