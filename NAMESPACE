@@ -3,4 +3,6 @@
 export(smd)
 exportMethods(smd)
 importFrom(MASS,ginv)
+importFrom(methods,setGeneric)
+importFrom(methods,setMethod)
 importFrom(stats,var)
