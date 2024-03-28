@@ -33,6 +33,7 @@
 #' @param na.rm Remove \code{NA} values from \code{x}? Defaults to \code{FALSE}.
 #' @param gref an integer indicating which level of \code{g} to use as the reference
 #'     group. Defaults to \code{1}.
+#' @importFrom methods setGeneric setMethod
 #' @return a \code{data.frame} containing standardized mean differences between
 #'    levels of \code{g} for values of \code{x}. The \code{data.frame} contains
 #'    the columns:

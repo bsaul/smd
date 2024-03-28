@@ -22,11 +22,11 @@ multinom_var <- function(p){
 #' @param w an optional vector of \code{numeric} weights
 #' @param na.rm passed to \code{sum}
 #' @importFrom stats var
+#' @importFrom methods setGeneric setMethod
 #' @return a list containing \code{mean} and \code{var}
 #' @keywords internal
 setGeneric("n_mean_var", def = function(x, w = NULL, na.rm = FALSE){
   standardGeneric("n_mean_var")
-
 })
 
 #' @rdname n_mean_var
