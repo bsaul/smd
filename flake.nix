@@ -46,27 +46,39 @@
           propagatedBuildInputs = smdImports;
         };
       
-      # Find a better way to build this derivation
-      # sudo nix build --option sandbox 'relaxed' .#cran 
+      # Run with
+      # nix build .#cran
       packages.cran = pkgs.stdenv.mkDerivation {
-          __noChroot = true; # WANT REMOVE THIS but 
-                             # R CMD check requires internet access
-                             # What's a better way?
           name = "cran";
           version = version;
           src = gitignoreSource ./.;
           buildInputs = [ 
               pkgs.R 
-              pkgs.pandoc 
+              pkgs.pandoc
+              pkgs.qpdf
               pkgs.texlive.combined.scheme-full
             ] ++ smdSuggests ++ smdImports ;
+          doCheck = true;
           buildPhase = ''
-            ${pkgs.R}/bin/R CMD build .  && \
-              ${pkgs.R}/bin/R CMD check $(ls -t . | head -n1) --as-cran
+            ${pkgs.R}/bin/R CMD build .
+          '';
+          # NOTE: 
+          # Not all checks will pass because R CMD check does stuff
+          # This one gives warning:
+          # * checking R files for syntax errors ... WARNING
+          #  OS reports request to set locale to "en_US.UTF-8" cannot be honored
+          # I don't know how to set the locale in a derivation 
+          # (or if that's even possible)
+          # Others are notes (e.g.):
+          # * Found the following (possibly) invalid URLs:
+          # R CMD check wants to access the interwebs but nix no like that.
+          checkPhase = ''
+            ${pkgs.R}/bin/R CMD check $(ls -t . | head -n1) --as-cran
           '';
           installPhase  = ''
             mkdir -p $out
             cp ${package}_${version}.tar.gz $out
+            cp -r ${package}.Rcheck/ $out/logs
           '';
       };
       
