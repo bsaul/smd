@@ -250,6 +250,7 @@ test_that("smd(x, g, w) works when x is character or logical", {
   )
 })
 
+test_that("smd() when factor has one level returns 0", {
 x <- factor(rep("No", 10))
 g <- factor(rep(c("Control", "Treat"), 5))
 w <- rep(c(3.12, 1.47), 5)
