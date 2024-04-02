@@ -249,3 +249,60 @@ test_that("smd(x, g, w) works when x is character or logical", {
     smd(x_fct, g, w)
   )
 })
+
+test_that("smd() when factor has one level returns 0", {
+x <- factor(rep("No", 10))
+g <- factor(rep(c("Control", "Treat"), 5))
+w <- rep(c(3.12, 1.47), 5)
+expect_equal(smd(x, g)$estimate, 0)
+expect_equal(smd(x, g, w)$estimate, 0)
+})
+
+
+test_that("smd() when character has one level returns 0", {
+  x <- rep("No", 10)
+  g <- factor(rep(c("Control", "Treat"), 5))
+  w <- rep(c(3.12, 1.47), 5)
+  expect_equal(smd(x, g)$estimate, 0)
+  expect_equal(smd(x, g, w)$estimate, 0)
+})
+
+
+test_that("smd() when two-level factor has one empty level returns 0", {
+  x <- factor(rep("No", 10), levels = c("No", "Yes"))
+  g <- factor(rep(c("Control", "Treat"), 5))
+  w <- rep(c(3.12, 1.47), 5)
+  expect_equal(smd(x, g)$estimate, 0)
+  expect_equal(smd(x, g, w)$estimate, 0)
+})
+
+
+test_that("smd() with two-level factor and one treatment group has an empty level", {
+  x <- factor(c(rep("No", 8), rep("Yes", 4), rep("No", 4)), levels = c("No", "Yes"))
+  g <- factor(c(rep("Control", 8), rep("Treat", 8)))
+  w <- rep(1, 16)
+  # Hand calculation of SMD
+  # Control mean =  a = [1 0]'
+  # Control var = c = diag(a) - outer(a,a) = [1 0; 0 0] - [1 0; 0 0] = [0 0; 0 0]
+  # Treat mean = b = [0.5 0.5]'
+  # Control var = d = diag(b) - outer(b,b) = [0.5 0; 0 0.5] - [0.25 0.25; 0.25 0.25] = [0.25 -0.25; -0.25 0.25]
+  # D = a - b = [0.5  -0.5]'
+  # S = (c + d)/2 = [0.125 -0.125; -0.125 0.125]
+  # S^-1 = [2 -2; -2 2]
+  # SMD = sqrt(D' S^-1 D)
+  #.    = sqrt([0.5 -0.5]*[2  -2]*[0.5] 
+  #                       [-2  2] [-0.5])
+  #.    = sqrt([2 -2][ 0.5]
+  #                  [-0.5])
+  #.    = sqrt(2)
+  expect_equal(smd(x, g)$estimate, sqrt(2))
+  expect_equal(smd(x, g, w)$estimate, sqrt(2))
+})
+
+test_that("smd() with two-level character vector and one treatment group has an empty level", {
+  x <- c(rep("No", 8), rep("Yes", 4), rep("No", 4))
+  g <- c(rep("Control", 8), rep("Treat", 8))
+  w <- rep(1, 16)
+  expect_equal(smd(x, g)$estimate, sqrt(2))
+  expect_equal(smd(x, g, w)$estimate, sqrt(2))
+})

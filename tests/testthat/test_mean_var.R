@@ -95,3 +95,49 @@ test_that("n_mean_var runs with NA values", {
     "list")
 })
 
+## all observations have the same value of X, smd should be 0
+
+test_that("unweighted n_mean_var with character x produces prop of 1", {
+  x <- c("Male", "Male", "Male")
+  res <- n_mean_var(x)
+  expect_equal(res$mean[[1]], 1)
+})
+
+test_that("weighted n_mean_var with character x produces prop of 1", {
+  x <- c("Male", "Male", "Male")
+  w <- c(1, 1, 1)
+  res <- n_mean_var(x, w)
+  expect_equal(res$mean[[1]], 1)
+})
+
+test_that("unweighted n_mean_var with one-level x produces prop of 1", {
+  x <- c("Male", "Male", "Male")
+  x <- factor(x)
+  res <- n_mean_var(x)
+  expect_equal(res$mean[[1]], 1)
+})
+
+test_that("weighted n_mean_var with one-level x produces prop of 1", {
+  x <- c("Male", "Male", "Male")
+  x <- factor(x)
+  w <- c(1, 1, 1)
+  res <- n_mean_var(x, w)
+  expect_equal(res$mean[[1]], 1)
+})
+
+test_that("unweighted n_mean_var with two-level x produces smd of 0", {
+  x <- c("Male", "Male", "Male")
+  x <- factor(x, levels = c("Female", "Male"))
+  res <- n_mean_var(x)
+  expect_equal(res$mean[[1]], 0)
+  expect_equal(res$mean[[2]], 1)
+})
+
+test_that("weighted n_mean_var with two-level x produces smd of 0", {
+  x <- c("Male", "Male", "Male")
+  x <- factor(x, levels = c("Female", "Male"))
+  w <- c(1, 1, 1)
+  res <- n_mean_var(x, w)
+  expect_equal(res$mean[[1]], 0)
+  expect_equal(res$mean[[2]], 1)
+})
