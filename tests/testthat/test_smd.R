@@ -309,20 +309,6 @@ test_that("smd() with two-level character vector and one treatment group has an 
   x <- c(rep("No", 8), rep("Yes", 4), rep("No", 4))
   g <- c(rep("Control", 8), rep("Treat", 8))
   w <- rep(1, 16)
-  # Hand calculation of SMD
-  # Control mean =  a = [1 0]'
-  # Control var = c = diag(a) - outer(a,a) = [1 0; 0 0] - [1 0; 0 0] = [0 0; 0 0]
-  # Treat mean = b = [0.5 0.5]'
-  # Control var = d = diag(b) - outer(b,b) = [0.5 0; 0 0.5] - [0.25 0.25; 0.25 0.25] = [0.25 -0.25; -0.25 0.25]
-  # D = a - b = [0.5  -0.5]'
-  # S = (c + d)/2 = [0.125 -0.125; -0.125 0.125]
-  # S^-1 = [2 -2; -2 2]
-  # SMD = sqrt(D' S^-1 D)
-  #.    = sqrt([0.5 -0.5]*[2  -2]*[0.5] 
-  #                       [-2  2] [-0.5])
-  #.    = sqrt([2 -2][ 0.5]
-  #                  [-0.5])
-  #.    = sqrt(2)
   expect_equal(smd(x, g)$estimate, sqrt(2))
   expect_equal(smd(x, g, w)$estimate, sqrt(2))
 })
