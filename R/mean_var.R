@@ -141,8 +141,7 @@ setMethod(
     }
 
     n <- sum(w)
-    p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n)
-    p[is.na(p)] <- 0 #for empty level in factor, converts proportion from NA to 0.
+    p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n, default = 0)
     list(n = n, mean = p, var = multinom_var(p))
   })
 
