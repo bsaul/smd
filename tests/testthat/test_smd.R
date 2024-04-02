@@ -297,12 +297,6 @@ test_that("smd() with two-level factor and one treatment group has an empty leve
   #.    = sqrt(2)
   expect_equal(smd(x, g)$estimate, sqrt(2))
   expect_equal(smd(x, g, w)$estimate, sqrt(2))
-  
-  x <- c(rep("No", 8), rep("Yes", 4), rep("No", 4))
-  g <- c(rep("Control", 8), rep("Treat", 8))
-  w <- rep(1, 16)
-  expect_equal(smd(x, g)$estimate, sqrt(2))
-  expect_equal(smd(x, g, w)$estimate, sqrt(2))
 })
 
 test_that("smd() with two-level character vector and one treatment group has an empty level", {
