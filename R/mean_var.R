@@ -73,7 +73,7 @@ setMethod(
     list(
       n    = n,
       mean = mean,
-      var  = if(n == 0) 0 else sum(w*(x - mean)^2)/n
+      var  = if(n == 0) 0 else sum((x - mean)^2)/n
     )
 })
 
@@ -142,7 +142,8 @@ setMethod(
 
     n <- sum(w)
     p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n, default = 0)
-    list(n = n, mean = p, var = multinom_var(p))
+    unwt_p <- prop.table(table(x)) #for unweighted variance
+    list(n = n, mean = p, var = multinom_var(unwt_p))
   })
 
 #' @rdname n_mean_var
