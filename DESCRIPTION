@@ -13,7 +13,7 @@ Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"),
              person("Daniel", "Sjoberg", role = c("ctb"),
                     email = "danield.sjoberg@gmail.com"),
              person("Nuvan", "Rathnayaka", role = c("ctb"),
-                    email = "nuvanrath@mail.proton.me")
+                    email = "nuvanrath@proton.me")
              )
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
