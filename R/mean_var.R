@@ -88,17 +88,6 @@ setMethod(
       mean = mean,
       var  = var
     )
-    
-    # xw   <- x * w
-    # n    <- sum(w)
-    # # Handle case were sum of weights is 0
-    # mean <- if(n == 0) 0 else sum(xw)/n
-    # 
-    # list(
-    #   n    = n,
-    #   mean = mean,
-    #   var  = if(n == 0) 0 else sum(w*(x - mean)^2)/n
-    # )
 })
 
 
@@ -174,10 +163,6 @@ setMethod(
     }
 
     list(n = n, mean = p, var = var)
-    
-    # n <- sum(w)
-    # p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n, default = 0)
-    # list(n = n, mean = p, var = multinom_var(p))
   })
 
 #' @rdname n_mean_var
