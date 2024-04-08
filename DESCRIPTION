@@ -17,7 +17,7 @@ Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"),
              )
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 
-    <http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf>. 
+    <https://support.sas.com/resources/papers/proceedings12/335-2012.pdf>. 
 Imports:
   MASS (>= 7.3-50),
   methods (>= 3.5.1)
