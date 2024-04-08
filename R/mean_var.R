@@ -21,7 +21,7 @@ multinom_var <- function(p){
 #' @param x a vector of values
 #' @param w an optional vector of \code{numeric} weights
 #' @param na.rm passed to \code{sum}
-#' @param unwgt.var Defaults to \code{TRUE}
+#' @param unwgt.var Use unweighted or weighted covariance matrix
 #' @importFrom stats var
 #' @importFrom methods setGeneric setMethod
 #' @return a list containing \code{mean} and \code{var}
@@ -42,7 +42,7 @@ setMethod(
 
     n    <- length(x)
     mean <- sum(x)/n
-
+    
     list(
       n    = n,
       mean = mean,
@@ -68,14 +68,16 @@ setMethod(
 
     xw   <- x * w
     n    <- sum(w)
+
     # Handle case were sum of weights is 0
     if(n == 0){
       mean = 0
       var = 0
     } else if(unwgt.var == TRUE){
       mean = sum(xw)/n
-      unwgt_mean = sum(x)/n
-      var = sum((x - mean)^2)/n
+      unwgt_n = length(x)
+      unwgt_mean = sum(x)/unwgt_n
+      var = sum((x - unwgt_mean)^2)/unwgt_n
     } else {
       mean = sum(xw)/n
       var = sum(w*(x - mean)^2)/n
@@ -86,6 +88,17 @@ setMethod(
       mean = mean,
       var  = var
     )
+    
+    # xw   <- x * w
+    # n    <- sum(w)
+    # # Handle case were sum of weights is 0
+    # mean <- if(n == 0) 0 else sum(xw)/n
+    # 
+    # list(
+    #   n    = n,
+    #   mean = mean,
+    #   var  = if(n == 0) 0 else sum(w*(x - mean)^2)/n
+    # )
 })
 
 
@@ -150,7 +163,7 @@ setMethod(
       w <- w[kp]
       x <- x[kp]
     }
-
+    
     n <- sum(w)
     p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n, default = 0)
     if(unwgt.var == TRUE){
@@ -161,6 +174,10 @@ setMethod(
     }
 
     list(n = n, mean = p, var = var)
+    
+    # n <- sum(w)
+    # p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n, default = 0)
+    # list(n = n, mean = p, var = multinom_var(p))
   })
 
 #' @rdname n_mean_var
