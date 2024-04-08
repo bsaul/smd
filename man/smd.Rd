@@ -14,27 +14,27 @@
 \alias{smd,data.frame,ANY,numeric-method}
 \title{Compute Standardized Mean Difference}
 \usage{
-smd(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+smd(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{character,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{character,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{character,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{character,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{logical,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{logical,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{logical,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{logical,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{matrix,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{matrix,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{matrix,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{matrix,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{list,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{list,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{list,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{list,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{data.frame,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{data.frame,ANY,missing}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 
-\S4method{smd}{data.frame,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
+\S4method{smd}{data.frame,ANY,numeric}(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE)
 }
 \arguments{
 \item{x}{a \code{vector} or \code{matrix} of values}
@@ -51,6 +51,8 @@ smd(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L)
 
 \item{gref}{an integer indicating which level of \code{g} to use as the reference
 group. Defaults to \code{1}.}
+
+\item{unwgt.var}{Defaults to \code{TRUE}}
 }
 \value{
 a \code{data.frame} containing standardized mean differences between

@@ -21,11 +21,12 @@ multinom_var <- function(p){
 #' @param x a vector of values
 #' @param w an optional vector of \code{numeric} weights
 #' @param na.rm passed to \code{sum}
+#' @param unwgt.var Defaults to \code{TRUE}
 #' @importFrom stats var
 #' @importFrom methods setGeneric setMethod
 #' @return a list containing \code{mean} and \code{var}
 #' @keywords internal
-setGeneric("n_mean_var", def = function(x, w = NULL, na.rm = FALSE){
+setGeneric("n_mean_var", def = function(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE){
   standardGeneric("n_mean_var")
 })
 
@@ -33,7 +34,7 @@ setGeneric("n_mean_var", def = function(x, w = NULL, na.rm = FALSE){
 setMethod(
   f          = "n_mean_var",
   signature  = c("numeric", "missing"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     if(na.rm == TRUE){
       x <- stats::na.omit(x)
@@ -53,7 +54,7 @@ setMethod(
 setMethod(
   f          = "n_mean_var",
   signature  = c("numeric", "numeric"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     if(na.rm == TRUE){
       kp <- !is.na(x)
@@ -68,12 +69,22 @@ setMethod(
     xw   <- x * w
     n    <- sum(w)
     # Handle case were sum of weights is 0
-    mean <- if(n == 0) 0 else sum(xw)/n
+    if(n == 0){
+      mean = 0
+      var = 0
+    } else if(unwgt.var == TRUE){
+      mean = sum(xw)/n
+      unwgt_mean = sum(x)/n
+      var = sum((x - mean)^2)/n
+    } else {
+      mean = sum(xw)/n
+      var = sum(w*(x - mean)^2)/n
+    }
 
     list(
       n    = n,
       mean = mean,
-      var  = if(n == 0) 0 else sum((x - mean)^2)/n
+      var  = var
     )
 })
 
@@ -82,43 +93,43 @@ setMethod(
 setMethod(
   f          = "n_mean_var",
   signature  = c("integer", "missing"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     check_for_two_levels(x)
-    n_mean_var(x = as.numeric(x), na.rm = na.rm)
+    n_mean_var(x = as.numeric(x), na.rm = na.rm, unwgt.var = unwgt.var)
 })
 
 #' @rdname n_mean_var
 setMethod(
   f          = "n_mean_var",
   signature  = c("integer", "numeric"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     check_for_two_levels(x)
-    n_mean_var(x = as.numeric(x), w = w, na.rm = na.rm)
+    n_mean_var(x = as.numeric(x), w = w, na.rm = na.rm, unwgt.var = unwgt.var)
 })
 
 #' @rdname n_mean_var
 setMethod(
   f          = "n_mean_var",
   signature  = c("logical", "missing"),
-  definition = function(x, na.rm = FALSE){
-    n_mean_var(x = as.numeric(x), na.rm = na.rm)
+  definition = function(x, na.rm = FALSE, unwgt.var = TRUE){
+    n_mean_var(x = as.numeric(x), na.rm = na.rm, unwgt.var = unwgt.var)
 })
 
 #' @rdname n_mean_var
 setMethod(
   f          = "n_mean_var",
   signature  = c("logical", "numeric"),
-  definition = function(x, w, na.rm = FALSE){
-    n_mean_var(x = as.numeric(x), w = w, na.rm = na.rm)
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
+    n_mean_var(x = as.numeric(x), w = w, na.rm = na.rm, unwgt.var = unwgt.var)
 })
 
 #' @rdname n_mean_var
 setMethod(
   f          = "n_mean_var",
   signature  = c("factor", "missing"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     if(na.rm == TRUE){
       x <- stats::na.omit(x)
@@ -132,7 +143,7 @@ setMethod(
 setMethod(
   f          = "n_mean_var",
   signature  = c("factor", "numeric"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     if(na.rm == TRUE){
       kp <- !is.na(x)
@@ -142,15 +153,21 @@ setMethod(
 
     n <- sum(w)
     p <- tapply(w, x, function(r) if(n == 0) 0 else sum(r)/n, default = 0)
-    unwt_p <- prop.table(table(x)) #for unweighted variance
-    list(n = n, mean = p, var = multinom_var(unwt_p))
+    if(unwgt.var == TRUE){
+      unwt_p <- prop.table(table(x)) #for unweighted variance
+      var <- multinom_var(unwt_p)
+    } else {
+      var = multinom_var(p)
+    }
+
+    list(n = n, mean = p, var = var)
   })
 
 #' @rdname n_mean_var
 setMethod(
   f          = "n_mean_var",
   signature  = c("character", "missing"),
-  definition = function(x, w, na.rm = FALSE){
+  definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE){
 
     if(na.rm == TRUE){
       x <- stats::na.omit(x)
@@ -169,7 +186,7 @@ setMethod(
 setMethod(
   f          = "n_mean_var",
   signature  = c("character", "numeric"),
-  definition = function(x, w, na.rm = TRUE){
+  definition = function(x, w, na.rm = TRUE, unwgt.var = TRUE){
 
     if(na.rm == TRUE){
       kp <- !is.na(x)
@@ -183,7 +200,7 @@ setMethod(
       warning("x has more than 50 levels. Are you sure you meant for this?")
     }
 
-    n_mean_var(x, w)
+    n_mean_var(x, w, unwgt.var = unwgt.var)
 })
 
 

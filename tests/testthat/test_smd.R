@@ -34,13 +34,13 @@ test_that("smd() returns correct values in specific cases", {
   x <- rep(0:1, times = c(7, 3))
   w <- rep(0:1, times = c(6, 4))
   gBx <- c(0, 0, 1, 1, 1)
-  expect_equal(smd(x, g, w)$estimate, -0.75/sqrt( (sum(w[6:10]*(gBx - 0.75)^2)/4)/2) )
+  expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, -0.75/sqrt( (sum(w[6:10]*(gBx - 0.75)^2)/4)/2) )
 
   # means in one group is not 0; some weights are 0;
   x <- rep(0:1, times = c(7, 3))
   w <- c(rep(0:1, times = c(6, 3)), 0)
   gBx <- c(0, 0, 1, 1, 1)
-  expect_equal(smd(x, g, w)$estimate, -(2/3)/sqrt( (sum(w[6:10]*(gBx - (2/3))^2)/3)/2) )
+  expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, -(2/3)/sqrt( (sum(w[6:10]*(gBx - (2/3))^2)/3)/2) )
 
   # means in both group is not 0; some weights are 0;
   x <- rep(c(0, 1, 1, 1, 1), times = 2)
@@ -60,7 +60,7 @@ test_that("smd() returns correct values in specific cases", {
   d <- ra - rb
   SS <- (SSa + SSb)/2
 
-  expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w)$estimate, check.attributes = FALSE)
+  expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w, unwgt.var = FALSE)$estimate, check.attributes = FALSE)
 
   w <- rep(0:1, each = 8)
   ra <- c(0, 0, 0, 0)
