@@ -24,22 +24,27 @@ test_that("smd() returns correct values in specific cases", {
   w <- rep(0:1, each = 5)
   # means in both groups are 0; some weights are 0;
   expect_equal(smd(x, g, w)$estimate, 0)
+  expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, 0)
 
   # means in one group is not 0; some weights are 0;
   x <- rep(0:1, times = c(7, 3))
   gBx <- c(0, 0, 1, 1, 1)
   expect_equal(smd(x, g, w)$estimate, -0.6/sqrt((var(gBx) * 4 /5)/ 2))
+  expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, -0.6/sqrt((var(gBx) * 4 /5)/ 2))
 
   # means in one group is not 0; some weights are 0;
   x <- rep(0:1, times = c(7, 3))
   w <- rep(0:1, times = c(6, 4))
   gBx <- c(0, 0, 1, 1, 1)
+  expect_equal(smd(x, g, w)$estimate,  -0.75/sqrt((var(gBx) * 4 /5)/ 2) )
   expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, -0.75/sqrt( (sum(w[6:10]*(gBx - 0.75)^2)/4)/2) )
+
 
   # means in one group is not 0; some weights are 0;
   x <- rep(0:1, times = c(7, 3))
   w <- c(rep(0:1, times = c(6, 3)), 0)
   gBx <- c(0, 0, 1, 1, 1)
+  expect_equal(smd(x, g, w)$estimate,  -(2/3)/sqrt((var(gBx) * 4 /5)/ 2) )
   expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, -(2/3)/sqrt( (sum(w[6:10]*(gBx - (2/3))^2)/3)/2) )
 
   # means in both group is not 0; some weights are 0;
@@ -47,19 +52,26 @@ test_that("smd() returns correct values in specific cases", {
   w <- rep(c(0, 1, 1, 1, 0), times = 2)
 
   expect_equal(smd(x, g, w)$estimate, 0)
+  expect_equal(smd(x, g, w, unwgt.var = FALSE)$estimate, 0)
 
   ## Checking factors
   x <- factor(rep(LETTERS[1:4], times = 4))
   g <- rep(c("a", "b"), each = 8)
   w <- c(rep(0:1, times = 4), rep(0:1, each = 4))
-
+  
   ra <- c(0, .5, 0, .5)
+  ra_unw <- c(0.25, 0.25, 0.25, 0.25)
   SSa <- diag(ra) - outer(ra, ra)
+  SSa_unw <- diag(ra_unw) - outer(ra_unw, ra_unw)
   rb <- c(.25, .25, .25, 0.25)
+  rb_unw <- c(.25, .25, .25, 0.25)
   SSb <- diag(rb) - outer(rb, rb)
+  SSb_unw <- diag(rb_unw) - outer(rb_unw, rb_unw)
   d <- ra - rb
   SS <- (SSa + SSb)/2
-
+  SS_unw <- (SSa_unw + SSb_unw)/2
+  
+  expect_equal(sqrt(t(d) %*% (MASS::ginv(SS_unw) %*% d)), smd(x, g, w)$estimate, check.attributes = FALSE)
   expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w, unwgt.var = FALSE)$estimate, check.attributes = FALSE)
 
   w <- rep(0:1, each = 8)
@@ -71,7 +83,7 @@ test_that("smd() returns correct values in specific cases", {
   SS <- (SSa + SSb)/2
 
   expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w)$estimate, check.attributes = FALSE)
-
+  expect_equal(sqrt(t(d) %*% (MASS::ginv(SS) %*% d)), smd(x, g, w, unwgt.var = FALSE)$estimate, check.attributes = FALSE)
 })
 
 
