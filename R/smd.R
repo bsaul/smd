@@ -26,7 +26,7 @@
 #' When using the SMD to evaluate the effectiveness of weighting in achieving
 #' covariate balance, it is important to isolate the change in SMD before and
 #' after weighting to the change in mean difference, so the denominator (covariance matrix)
-#' must be held constant \href{https://doi.org/10.1002/sim.3207}{Stuart 2008}.
+#' must be held constant \doi{10.1002/sim.3207}{Stuart 2008}.
 #' By default, the unweighted covariance matrix is used to compute SMD in both
 #' the unweighted and weighted case. If the weights are not being used to adjust
 #' for covariate imbalance (e.g. case weights), the \code{unwgt.var} argument
