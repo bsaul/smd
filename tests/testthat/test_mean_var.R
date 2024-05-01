@@ -1,6 +1,6 @@
 context("Testing n_mean_var functions")
 
-expect_list <- function(x){
+expect_list <- function(x) {
   expect_is(n_mean_var(x), "list")
 }
 
@@ -33,7 +33,7 @@ test_that("n_mean_var works for character values", {
 })
 
 test_that("n_mean_var works for unsorted factors", {
-  expect_list(factor(c(1,2,2,2,1,1)))
+  expect_list(factor(c(1, 2, 2, 2, 1, 1)))
 })
 
 test_that("n_mean_var works for missing x", {
@@ -49,7 +49,7 @@ test_that("n_mean_var works for length(1) x", {
 })
 
 test_that("n_mean_var works for factor with only 1 level", {
-  expect_list(factor(c(1,1,1,1,1,1)))
+  expect_list(factor(c(1, 1, 1, 1, 1, 1)))
 })
 
 test_that("n_mean_var returns error if x and w have different length", {
@@ -67,8 +67,9 @@ test_that("n_mean_var returns correct values with/without weights", {
   res <- n_mean_var(x)
   expect_equal(res$n, length(x))
   expect_equal(as.numeric(res$mean),
-               c(A = 0.25, B = 0.25, C = 0.25, D = 0.25),
-               check.attributes = FALSE)
+    c(A = 0.25, B = 0.25, C = 0.25, D = 0.25),
+    check.attributes = FALSE
+  )
 
   # Checking factors when all weights are 0 (hopefully avoiding NaN issues)
   x <- factor(rep(LETTERS[1:4], times = 2))
@@ -89,10 +90,13 @@ test_that("n_mean_var works for >50 unique values", {
 
 test_that("n_mean_var runs with NA values", {
   expect_is(
-    n_mean_var(x = c(TRUE, TRUE, FALSE, NA),
-               w = c(0, 1, 1, 0),
-               na.rm = TRUE),
-    "list")
+    n_mean_var(
+      x = c(TRUE, TRUE, FALSE, NA),
+      w = c(0, 1, 1, 0),
+      na.rm = TRUE
+    ),
+    "list"
+  )
 })
 
 ## all observations have the same value of X, smd should be 0
