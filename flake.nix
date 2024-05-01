@@ -17,7 +17,7 @@
     flake-utils.lib.eachDefaultSystem (system: let
       
       package = "smd";
-      version = "0.6.8";
+      version = "0.7.0";
 
       pkgs = nixpkgs.legacyPackages.${system};
 
