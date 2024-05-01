@@ -4,7 +4,7 @@
 x1 <- c(1, 2) # Should return warning
 x2 <- c(NA, 1, 2) # Should return warning
 x3 <- c(1, 2, 3) # Should return nothing
-x4 <- c(1,1,1,1) # Should return nothing
+x4 <- c(1, 1, 1, 1) # Should return nothing
 
 test_that("check_for_two_levels output as expected", {
   expect_warning(check_for_two_levels(x1))

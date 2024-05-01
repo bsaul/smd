@@ -139,7 +139,8 @@ df$g <- gg2
 df %>%
   summarize_at(
     .vars = vars(dplyr::matches("^x")),
-    .funs = list(smd = ~ smd(., g = g)$estimate))
+    .funs = list(smd = ~ smd(., g = g)$estimate)
+  )
 ```
 
 

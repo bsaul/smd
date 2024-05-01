@@ -1,7 +1,6 @@
 ## Comparing to other packages ####
 
-compare_packages <- function(data){
-
+compare_packages <- function(data) {
   smdval <- abs(smd(x = data$x, g = data$g)$estimate)
   # compare to TableOne package
   # NOTE: for boolean variables in small datasets, tableone and smd will have
@@ -23,23 +22,36 @@ compare_packages <- function(data){
 
   # compare stddiff package
   expect_equal(
-    round(smdval, 3), #Not sure why stddiff rounds, but it does
-    stddiff::stddiff.numeric(data,"g","x")[7],
-    tolerance = 0.01)
+    round(smdval, 3), # Not sure why stddiff rounds, but it does
+    stddiff::stddiff.numeric(data, "g", "x")[7],
+    tolerance = 0.01
+  )
 }
 
 set.seed(123)
 dg <- list(
-  list(type = "numeric",
-       x    = rnorm(60)),
-  list(type = "integer",
-       x    = rep(rep(1L:3L, each = 10), times = 2)),
-  list(type = "factor",
-       x    = factor(rep(rep(c("x", "y", "z"), each = 10), times = 2))),
-  list(type = "factor_unsorted",
-       x    = factor(rep(rep(c("x", "y", "z"), times = 10), times = 2))),
-  list(type = "character",
-       x    = rep(rep(c("x", "y", "z"), each = 10), times = 2)),
-  list(type = "boolean",
-       x    = as.logical(sample(rbinom(60, size = 1, prob = .5))))
+  list(
+    type = "numeric",
+    x = rnorm(60)
+  ),
+  list(
+    type = "integer",
+    x = rep(rep(1L:3L, each = 10), times = 2)
+  ),
+  list(
+    type = "factor",
+    x = factor(rep(rep(c("x", "y", "z"), each = 10), times = 2))
+  ),
+  list(
+    type = "factor_unsorted",
+    x = factor(rep(rep(c("x", "y", "z"), times = 10), times = 2))
+  ),
+  list(
+    type = "character",
+    x = rep(rep(c("x", "y", "z"), each = 10), times = 2)
+  ),
+  list(
+    type = "boolean",
+    x = as.logical(sample(rbinom(60, size = 1, prob = .5)))
+  )
 )
