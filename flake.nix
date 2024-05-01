@@ -90,6 +90,8 @@
           pkgs.R
           pkgs.rPackages.devtools
           pkgs.rPackages.usethis
+          pkgs.rPackages.styler
+          pkgs.rPackages.lintr
         ] ++ smdImports ++ smdSuggests ;
       }; 
 
