@@ -23,7 +23,17 @@
 #' For a \code{logical} or \code{factor} with only two levels, the equation above is
 #' \eqn{\bar{x}_g = \hat{p}_g}, i.e. the sample proportion and \eqn{s^2_g = \hat{p}_g(1 - \hat{p}_g)}.
 #'
+#' When using the SMD to evaluate the effectiveness of weighting in achieving 
+#' covariate balance, it is important to isolate the change in SMD before and 
+#' after weighting to the change in mean difference, so the denominator (covariance matrix) 
+#' must be held constant \href{https://doi.org/10.1002/sim.3207}{Stuart 2008}. 
+#' By default, the unweighted covariance matrix is used to compute SMD in both 
+#' the unweighted and weighted case. If the weights are not being used to adjust 
+#' for covariate imbalance (e.g. case weights), the \code{unwgt.var} argument 
+#' can be set to \code{FALSE} to use the weighted covariance matrix as the denominator.
+#'
 #' @name smd
+#'
 #' @param x a \code{vector} or \code{matrix} of values
 #' @param g a vector of at least 2 groups to compare. This should coercable to a
 #'    \code{factor}.
@@ -33,6 +43,7 @@
 #' @param na.rm Remove \code{NA} values from \code{x}? Defaults to \code{FALSE}.
 #' @param gref an integer indicating which level of \code{g} to use as the reference
 #'     group. Defaults to \code{1}.
+#' @param unwgt.var Use unweighted or weighted covariance matrix. Defaults to \code{TRUE}
 #' @importFrom methods setGeneric setMethod
 #' @return a \code{data.frame} containing standardized mean differences between
 #'    levels of \code{g} for values of \code{x}. The \code{data.frame} contains
@@ -49,13 +60,13 @@
 #' smd(x, g)
 setGeneric(
   "smd",
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
 
     if(gref < 1 || gref > length(unique(g))){
       stop(sprintf("gref must be an integer within %s", length(unique(g))))
     }
 
-    parts <- compute_smd_parts(.x = x, .g = g, .w = w, .na = na.rm, .ref = gref)
+    parts <- compute_smd_parts(.x = x, .g = g, .w = w, .na = na.rm, .ref = gref, .unwgt = unwgt.var)
     d     <- compute_smd_pairwise(parts)
     out   <- list(term = names(d), estimate = unname(d))
 
@@ -74,8 +85,8 @@ setGeneric(
 setMethod(
   "smd",
   signature = c("character", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
-    smd(x = as.factor(x), g = g, std.error = std.error, na.rm = na.rm, gref = gref)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
+    smd(x = as.factor(x), g = g, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
   }
 )
 
@@ -85,8 +96,8 @@ setMethod(
 setMethod(
   "smd",
   signature = c("character", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
-    smd(x = as.factor(x), g = g, w = w, std.error = std.error, na.rm = na.rm, gref = gref)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
+    smd(x = as.factor(x), g = g, w = w, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
   }
 )
 
@@ -96,8 +107,8 @@ setMethod(
 setMethod(
   "smd",
   signature = c("logical", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
-    smd(x = as.numeric(x), g = g, std.error = std.error, na.rm = na.rm, gref = gref)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
+    smd(x = as.numeric(x), g = g, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
   }
 )
 
@@ -107,8 +118,8 @@ setMethod(
 setMethod(
   "smd",
   signature = c("logical", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
-    smd(x = as.numeric(x), g = g, w = w, std.error = std.error, na.rm = na.rm, gref = gref)
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
+    smd(x = as.numeric(x), g = g, w = w, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
   }
 )
 
@@ -118,14 +129,14 @@ setMethod(
 setMethod(
   "smd",
   signature = c("matrix", "ANY",  "missing"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
 
     if(std.error){
       stop("smd is not set up to compute std.error on a matrix")
     }
 
     apply(x, 2, function(j) {
-      simplify2array(smd(x = j, g = g, std.error = std.error, na.rm = na.rm, gref = gref)$estimate)
+      simplify2array(smd(x = j, g = g, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)$estimate)
     })
   }
 )
@@ -136,7 +147,7 @@ setMethod(
 setMethod(
   "smd",
   signature = c("matrix", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
     if(std.error){
       stop("smd is not set up to compute std.error on a matrix")
     }
@@ -144,7 +155,8 @@ setMethod(
     apply(x, 2, function(j) {
       simplify2array(smd(x = j, w = w, g = g,
                          std.error = std.error,
-                         na.rm = na.rm, gref = gref)$estimate)
+                         na.rm = na.rm, gref = gref,
+                         unwgt.var = unwgt.var)$estimate)
     })
   }
 )
@@ -155,10 +167,10 @@ setMethod(
 setMethod(
   "smd",
   signature = c("list", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
 
     tidy_smd_multiplevar(lapply(x, function(z) {
-      smd(x = z, g = g, std.error = std.error, na.rm = na.rm, gref = gref)
+      smd(x = z, g = g, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
     }))
   }
 )
@@ -169,10 +181,10 @@ setMethod(
 setMethod(
   "smd",
   signature = c("list",  "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
 
     tidy_smd_multiplevar(lapply(x, function(z) {
-      smd(x = z, g = g, w = w, std.error = std.error, na.rm = na.rm, gref = gref)
+      smd(x = z, g = g, w = w, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
     }))
   }
 )
@@ -183,10 +195,10 @@ setMethod(
 setMethod(
   "smd",
   signature = c("data.frame", "ANY", "missing"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
 
     tidy_smd_multiplevar(lapply(x, function(z) {
-      smd(x = z, g = g, std.error = std.error, na.rm = na.rm, gref = gref)
+      smd(x = z, g = g, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
     }))
   }
 )
@@ -197,10 +209,10 @@ setMethod(
 setMethod(
   "smd",
   signature = c("data.frame", "ANY", "numeric"),
-  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L){
+  def = function(x, g, w, std.error = FALSE, na.rm = FALSE, gref = 1L, unwgt.var = TRUE){
 
     tidy_smd_multiplevar(lapply(x, function(z) {
-      smd(x = z, g = g,  w = w, std.error = std.error, na.rm = na.rm, gref = gref)
+      smd(x = z, g = g,  w = w, std.error = std.error, na.rm = na.rm, gref = gref, unwgt.var = unwgt.var)
     }))
   }
 )
@@ -288,10 +300,11 @@ compute_smd_var <- function(d, smd_parts){
 #' @param .g a vector of groupings to compare
 #' @param .na \code{TRUE/FALSE}. \code{NA} handling
 #' @param .ref integer position of the reference group
+#' @param .unwgt Use unweighted or weighted covariance.
 #' @param applyFUN the \code{FUN} used to compute the SMD parts. Defaults to
 #' \code{\link{n_mean_var}}
 #' @keywords internal
-compute_smd_parts <- function(.x, .g, .w, .na, .ref,
+compute_smd_parts <- function(.x, .g, .w, .na, .ref, .unwgt,
                               applyFUN = n_mean_var){
 
   # Checks
@@ -320,7 +333,7 @@ compute_smd_parts <- function(.x, .g, .w, .na, .ref,
   dd$w <- if(missing(.w)) NULL else .w
   ll  <- split.data.frame(dd, f = .g)
   U   <- simplify2array(lapply(ll, function(M){
-    do.call(applyFUN, args = append(M, list(na.rm = .na)))
+    do.call(applyFUN, args = append(M, list(na.rm = .na, unwgt.var = .unwgt)))
   }))
 
   # Create pairwise components

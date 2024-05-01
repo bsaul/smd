@@ -14,27 +14,27 @@
 \alias{n_mean_var,character,numeric-method}
 \title{Compute n, mean and variance}
 \usage{
-n_mean_var(x, w = NULL, na.rm = FALSE)
+n_mean_var(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{numeric,missing}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{numeric,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{numeric,numeric}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{numeric,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{integer,missing}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{integer,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{integer,numeric}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{integer,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{logical,missing}(x, na.rm = FALSE)
+\S4method{n_mean_var}{logical,missing}(x, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{logical,numeric}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{logical,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{factor,missing}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{factor,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{factor,numeric}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{factor,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{character,missing}(x, w = NULL, na.rm = FALSE)
+\S4method{n_mean_var}{character,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
-\S4method{n_mean_var}{character,numeric}(x, w = NULL, na.rm = TRUE)
+\S4method{n_mean_var}{character,numeric}(x, w = NULL, na.rm = TRUE, unwgt.var = TRUE)
 }
 \arguments{
 \item{x}{a vector of values}
@@ -42,6 +42,8 @@ n_mean_var(x, w = NULL, na.rm = FALSE)
 \item{w}{an optional vector of \code{numeric} weights}
 
 \item{na.rm}{passed to \code{sum}}
+
+\item{unwgt.var}{Use unweighted or weighted covariance matrix}
 }
 \value{
 a list containing \code{mean} and \code{var}

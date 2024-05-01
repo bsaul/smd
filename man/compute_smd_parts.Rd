@@ -4,7 +4,7 @@
 \alias{compute_smd_parts}
 \title{Compute components of SMD}
 \usage{
-compute_smd_parts(.x, .g, .w, .na, .ref, applyFUN = n_mean_var)
+compute_smd_parts(.x, .g, .w, .na, .ref, .unwgt, applyFUN = n_mean_var)
 }
 \arguments{
 \item{.x}{a vector of values}
@@ -16,6 +16,8 @@ compute_smd_parts(.x, .g, .w, .na, .ref, applyFUN = n_mean_var)
 \item{.na}{\code{TRUE/FALSE}. \code{NA} handling}
 
 \item{.ref}{integer position of the reference group}
+
+\item{.unwgt}{Use unweighted or weighted covariance.}
 
 \item{applyFUN}{the \code{FUN} used to compute the SMD parts. Defaults to
 \code{\link{n_mean_var}}}
