@@ -55,11 +55,13 @@
           buildInputs = [ 
               pkgs.R 
               pkgs.pandoc
+              pkgs.rPackages.devtools
               pkgs.qpdf
               pkgs.texlive.combined.scheme-full
             ] ++ smdSuggests ++ smdImports ;
           doCheck = true;
           buildPhase = ''
+            ${pkgs.R}/bin/Rscript -e 'devtools::document()'
             ${pkgs.R}/bin/R CMD build .
           '';
           # NOTE: 
