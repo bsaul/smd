@@ -16,7 +16,7 @@ references:
   - family: Dalton
     given: Jarrod E
   volume: 335
-  URL: 'http://www.lerner.ccf.org/qhs/software/lib/stddiff.pdf'
+  URL: 'https://support.sas.com/resources/papers/proceedings12/335-2012.pdf'
   booktitle: SAS Global Forum
   page: 1--6
   type: article-journal
