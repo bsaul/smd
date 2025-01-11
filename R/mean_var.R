@@ -19,7 +19,8 @@ multinom_var <- function(p) {
 #'
 #' @name n_mean_var
 #' @param x a vector of values
-#' @param w an optional vector of \code{numeric} weights
+#' @param w an optional vector of \code{numeric} weights or a vector convertible
+#'   with numeric with `as.double()`.
 #' @param na.rm passed to \code{sum}
 #' @param unwgt.var Use unweighted or weighted covariance matrix
 #' @importFrom stats var
