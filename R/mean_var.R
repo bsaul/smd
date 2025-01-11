@@ -90,6 +90,26 @@ setMethod(
   }
 )
 
+n_mean_var_any <- function(x, w, na.rm = FALSE, unwgt.var = TRUE) {
+  tryCatch({
+    w <- as.double(w)
+  }, 
+  warning = function(w) stop(
+    "A warning was emitted while converting weights to double: ",
+    w$message,
+    call. = FALSE
+  )
+  )
+  
+  n_mean_var(x = x, w = w, na.rm = na.rm, unwgt.var = unwgt.var)
+}
+
+#' @rdname n_mean_var
+setMethod(
+  f = "n_mean_var",
+  signature = c("numeric", "ANY"),
+  definition = n_mean_var_any
+)
 
 #' @rdname n_mean_var
 setMethod(
@@ -114,6 +134,13 @@ setMethod(
 #' @rdname n_mean_var
 setMethod(
   f = "n_mean_var",
+  signature = c("integer", "ANY"),
+  definition = n_mean_var_any
+)
+
+#' @rdname n_mean_var
+setMethod(
+  f = "n_mean_var",
   signature = c("logical", "missing"),
   definition = function(x, na.rm = FALSE, unwgt.var = TRUE) {
     n_mean_var(x = as.numeric(x), na.rm = na.rm, unwgt.var = unwgt.var)
@@ -127,6 +154,13 @@ setMethod(
   definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE) {
     n_mean_var(x = as.numeric(x), w = w, na.rm = na.rm, unwgt.var = unwgt.var)
   }
+)
+
+#' @rdname n_mean_var
+setMethod(
+  f = "n_mean_var",
+  signature = c("logical", "ANY"),
+  definition = n_mean_var_any
 )
 
 #' @rdname n_mean_var
@@ -170,6 +204,13 @@ setMethod(
 #' @rdname n_mean_var
 setMethod(
   f = "n_mean_var",
+  signature = c("factor", "ANY"),
+  definition = n_mean_var_any
+)
+
+#' @rdname n_mean_var
+setMethod(
+  f = "n_mean_var",
   signature = c("character", "missing"),
   definition = function(x, w, na.rm = FALSE, unwgt.var = TRUE) {
     if (na.rm == TRUE) {
@@ -205,4 +246,11 @@ setMethod(
 
     n_mean_var(x, w, unwgt.var = unwgt.var)
   }
+)
+
+#' @rdname n_mean_var
+setMethod(
+  f = "n_mean_var",
+  signature = c("character", "ANY"),
+  definition = n_mean_var_any
 )
