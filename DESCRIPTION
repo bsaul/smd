@@ -1,7 +1,7 @@
 Package: smd
 Type: Package
 Title: Compute Standardized Mean Differences
-Version: 0.7.0
+Version: 0.8.0
 Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), 
                     email = "bradleysaul@fastmail.com"),
              person("Alex", "Breskin", role = c("ctb"), 
