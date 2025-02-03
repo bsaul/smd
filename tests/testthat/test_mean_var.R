@@ -160,7 +160,7 @@ test_that("weighted n_mean_var errors when conversion fails", {
   x <- 1:3
   w <- c("a", "b", "c")
   expect_error(
-    n_mean_var(x, w), 
+    n_mean_var(x, w),
     "A warning was emitted while converting weights to double"
   )
 })

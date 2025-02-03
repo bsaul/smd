@@ -92,16 +92,19 @@ setMethod(
 )
 
 n_mean_var_any <- function(x, w, na.rm = FALSE, unwgt.var = TRUE) {
-  tryCatch({
-    w <- as.double(w)
-  }, 
-  warning = function(w) stop(
-    "A warning was emitted while converting weights to double: ",
-    w$message,
-    call. = FALSE
+  tryCatch(
+    {
+      w <- as.double(w)
+    },
+    warning = function(w) {
+      stop(
+        "A warning was emitted while converting weights to double: ",
+        w$message,
+        call. = FALSE
+      )
+    }
   )
-  )
-  
+
   n_mean_var(x = x, w = w, na.rm = na.rm, unwgt.var = unwgt.var)
 }
 
