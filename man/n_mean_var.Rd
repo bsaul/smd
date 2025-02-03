@@ -4,14 +4,19 @@
 \alias{n_mean_var}
 \alias{n_mean_var,numeric,missing-method}
 \alias{n_mean_var,numeric,numeric-method}
+\alias{n_mean_var,numeric,ANY-method}
 \alias{n_mean_var,integer,missing-method}
 \alias{n_mean_var,integer,numeric-method}
+\alias{n_mean_var,integer,ANY-method}
 \alias{n_mean_var,logical,missing-method}
 \alias{n_mean_var,logical,numeric-method}
+\alias{n_mean_var,logical,ANY-method}
 \alias{n_mean_var,factor,missing-method}
 \alias{n_mean_var,factor,numeric-method}
+\alias{n_mean_var,factor,ANY-method}
 \alias{n_mean_var,character,missing-method}
 \alias{n_mean_var,character,numeric-method}
+\alias{n_mean_var,character,ANY-method}
 \title{Compute n, mean and variance}
 \usage{
 n_mean_var(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
@@ -20,26 +25,37 @@ n_mean_var(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
 \S4method{n_mean_var}{numeric,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
+\S4method{n_mean_var}{numeric,ANY}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
+
 \S4method{n_mean_var}{integer,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
 \S4method{n_mean_var}{integer,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
+
+\S4method{n_mean_var}{integer,ANY}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
 \S4method{n_mean_var}{logical,missing}(x, na.rm = FALSE, unwgt.var = TRUE)
 
 \S4method{n_mean_var}{logical,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
+\S4method{n_mean_var}{logical,ANY}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
+
 \S4method{n_mean_var}{factor,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
 \S4method{n_mean_var}{factor,numeric}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
+\S4method{n_mean_var}{factor,ANY}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
+
 \S4method{n_mean_var}{character,missing}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 
 \S4method{n_mean_var}{character,numeric}(x, w = NULL, na.rm = TRUE, unwgt.var = TRUE)
+
+\S4method{n_mean_var}{character,ANY}(x, w = NULL, na.rm = FALSE, unwgt.var = TRUE)
 }
 \arguments{
 \item{x}{a vector of values}
 
-\item{w}{an optional vector of \code{numeric} weights}
+\item{w}{an optional vector of \code{numeric} weights or a vector convertible
+with numeric with `as.double()`.}
 
 \item{na.rm}{passed to \code{sum}}
 

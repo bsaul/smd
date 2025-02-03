@@ -1,7 +1,7 @@
 Package: smd
 Type: Package
 Title: Compute Standardized Mean Differences
-Version: 0.7.0
+Version: 0.8.0
 Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"), 
                     email = "bradleysaul@fastmail.com"),
              person("Alex", "Breskin", role = c("ctb"), 
@@ -13,7 +13,9 @@ Authors@R: c(person("Bradley", "Saul", role = c("aut", "cre"),
              person("Daniel", "Sjoberg", role = c("ctb"),
                     email = "danield.sjoberg@gmail.com"),
              person("Nuvan", "Rathnayaka", role = c("ctb"),
-                    email = "nuvanrath@proton.me")
+                    email = "nuvanrath@proton.me"),
+             person("Malcolm", "Barrett", role = c("ctb"), 
+                    email = "malcolmbarrett@gmail.com")
              )
 Description: Computes standardized mean differences and confidence intervals for 
     multiple data types based on Yang, D., & Dalton, J. E. (2012) 

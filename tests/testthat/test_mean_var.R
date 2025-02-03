@@ -145,3 +145,22 @@ test_that("weighted n_mean_var with two-level x produces smd of 0", {
   expect_equal(res$mean[[1]], 0)
   expect_equal(res$mean[[2]], 1)
 })
+
+test_that("weighted n_mean_var works for custom vector class of weights", {
+  x <- c("Male", "Male", "Male")
+  x <- factor(x, levels = c("Female", "Male"))
+  w <- c(1, 1, 1)
+  class(w) <- "custom_vector"
+  res <- n_mean_var(x, w)
+  expect_equal(res$mean[[1]], 0)
+  expect_equal(res$mean[[2]], 1)
+})
+
+test_that("weighted n_mean_var errors when conversion fails", {
+  x <- 1:3
+  w <- c("a", "b", "c")
+  expect_error(
+    n_mean_var(x, w), 
+    "A warning was emitted while converting weights to double"
+  )
+})
