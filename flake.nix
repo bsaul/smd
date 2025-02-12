@@ -4,7 +4,7 @@
     bash-prompt = "smd> ";
   };
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
@@ -14,10 +14,12 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, gitignore }:
-    flake-utils.lib.eachDefaultSystem (system: let
+    flake-utils.lib.eachDefaultSystem (system: 
+    
+    let
       
       package = "smd";
-      version = "0.7.0";
+      version = "0.8.0";
 
       pkgs = nixpkgs.legacyPackages.${system};
 
